@@ -1,0 +1,15 @@
+.message {
+    margin-top: 5px;
+}
+
+.textSuccess {
+    color: green;
+}
+
+.textDanger {
+    color: red;
+}
+
+.textInfo {
+    color: #6f42f5;
+}
