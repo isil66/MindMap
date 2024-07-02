@@ -7,7 +7,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
 const RegisterForm = () => {
     const router = useRouter();
-    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
@@ -17,7 +17,7 @@ const RegisterForm = () => {
         event.preventDefault();
 
         const formData = {
-            name,
+            username,
             email,
             password,
         };
@@ -42,7 +42,7 @@ const RegisterForm = () => {
                 setMessage('Registered successfully!');
                 setType("success")
                 console.log('User registered successfully!');
-                setName('');
+                setUsername('');
                 setEmail('');
                 setPassword('');
                 await router.push('/dashboard/');
@@ -66,8 +66,8 @@ const RegisterForm = () => {
                             type="text"
                             id="name"
                             className="form-control"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                         />
                     </div>
                     <div className="mb-3">

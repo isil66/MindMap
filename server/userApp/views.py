@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from .serializers import UserCreationSerializer
 
 
 class UserListAPIView(APIView):
@@ -13,19 +14,15 @@ class UserListAPIView(APIView):
 
 class UserRegistrationAPIView(APIView):
     def post(self, request):
-        name = request.data.get('name')
-        email = request.data.get('email')
-        password = request.data.get('password')
+        serializer = UserCreationSerializer(data=request.data)
 
-        if User.objects.filter(email=email).exists():
-            return Response({'error': 'A user with that email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            if User.objects.filter(email=email).exists():
+                return Response({'error': 'A user with that email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            user = User.objects.create_user(username=email, email=email, password=password)
-            user.first_name = name
-            user.save()
+            serializer.save()
 
             return Response({'message': 'User registered successfully', 'redirect': 'dashboard/'},
                             status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': f'{serializer.errors}'}, status=status.HTTP_400_BAD_REQUEST)
