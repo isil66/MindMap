@@ -1,25 +1,43 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from 'react';
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
-export default function Page() {
-    const [revenue, setRevenue] = useState([]);
+const Page = () => {
+    const [message, setMessage] = useState('');
+    const [type, setType] = useState('info');
 
     useEffect(() => {
-        fetch("${BASE_URL}/dashboard/")
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch data");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setRevenue(data);
-            })
-            .catch((error) => {
-                console.error("Error fetching :", error);
-            });
-    }, []);
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${BASE_URL}/dashboard/`);
 
-    return <div>hello</div>;
-}
+                if (!response.ok) {
+                    const responseJson = await response.json();
+                    const errorMessage = responseJson.error;
+                    setMessage(errorMessage);
+                    setType("error");
+                } else {
+                    const responseJson = await response.json();
+                    const redirect = responseJson.redirect;
+                    setMessage('Hi');
+                    setType("success");
+                    console.log('Dashboard');
+                }
+            } catch (error) {
+                setMessage(`Error: ${error.message}`);
+                setType("error");
+                console.error('Error fetching dashboard data:', error.message);
+            }
+        };
+
+        fetchData();
+    }, []); // Empty dependency array ensures useEffect runs only once
+
+    return (
+        <div>
+            <div>Hello</div>
+        </div>
+    );
+};
+
+export default Page;

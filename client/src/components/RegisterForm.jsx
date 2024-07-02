@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import styles from '../styles/Home.module.css';
 import Message from './Message';
-
+import { useRouter } from 'next/router';
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
 const RegisterForm = () => {
+    const router = useRouter();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -44,7 +45,7 @@ const RegisterForm = () => {
                 setName('');
                 setEmail('');
                 setPassword('');
-
+                await router.push('/dashboard/');
             }
 
 
