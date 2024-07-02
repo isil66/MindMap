@@ -2,6 +2,9 @@ import React, {useState} from 'react';
 import styles from '../styles/Home.module.css';
 import Message from './Message';
 
+
+const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
+
 const RegisterForm = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -19,7 +22,7 @@ const RegisterForm = () => {
         };
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/register/', {
+            const response = await fetch(`${BASE_URL}/register/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -28,19 +31,21 @@ const RegisterForm = () => {
             });
 
             if (!response.ok) {
-
                 const responseJson = await response.json();
                 const errorMessage = responseJson.error;
                 setMessage(errorMessage);
                 setType("error")
-            }
-            else{
+            } else {
+                const responseJson = await response.json();
+                const redirect = responseJson.redirect;
                 setMessage('Registered successfully!');
                 setType("success")
                 console.log('User registered successfully!');
                 setName('');
                 setEmail('');
-                setPassword('');}
+                setPassword('');
+
+            }
 
 
         } catch (error) {
@@ -87,7 +92,7 @@ const RegisterForm = () => {
                     <button type="submit" className="btn btn-primary">Register</button>
                 </form>
             </div>
-            <div >
+            <div>
                 <Message type={type} text={message}/>
             </div>
         </>

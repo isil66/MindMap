@@ -1,23 +1,25 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
+
+const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
 export default function Page() {
-  const [revenue, setRevenue] = useState([]);
+    const [revenue, setRevenue] = useState([]);
 
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/dashboard/")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch revenue data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setRevenue(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching revenue:", error);
-      });
-  }, []);
+    useEffect(() => {
+        fetch("${BASE_URL}/dashboard/")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch data");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setRevenue(data);
+            })
+            .catch((error) => {
+                console.error("Error fetching :", error);
+            });
+    }, []);
 
-  return <div>hello</div>;
+    return <div>hello</div>;
 }

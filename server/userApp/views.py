@@ -25,6 +25,7 @@ class UserRegistrationAPIView(APIView):
             user.first_name = name
             user.save()
 
-            return Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
+            return Response({'message': 'User registered successfully', 'redirect': 'dashboard/'},
+                            status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
