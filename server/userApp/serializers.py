@@ -16,3 +16,9 @@ class UserCreationSerializer(serializers.ModelSerializer):
         # create_user çağır so that the password is hashed and not stored directly on db
         user = User.objects.create_user(**validated_data)
         return user
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'password']
