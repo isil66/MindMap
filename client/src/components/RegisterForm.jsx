@@ -64,58 +64,58 @@ const RegisterForm = () => {
     };
 
     return (
-        <>
-            <div className={styles.main}>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                        <label htmlFor="name" className="form-label">Name:</label>
-                        <input
-                            type="text"
-                            id="name"
-                            className="form-control"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="email" className="form-label">Email:</label>
-                        <input
-                            type="email"
-                            id="email"
-                            className="form-control"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="password" className="form-label">Password:</label>
-                        <div className="input-group">
-                            <input
-                                type={passwordVisible ? "text" : "password"}
-                                id="password"
-                                className="form-control"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                            <div className="input-group-append">
-                                <button
-                                    type="button"
-                                    className="btn btn-outline-secondary"
-                                    onClick={togglePasswordVisibility}
-                                >
-                                    <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit" className="btn btn-primary">Register</button>
-                </form>
+    <>
+      <div className={styles.main}>
+        <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '400px' }}>
+          <div className="mb-3">
+            <label htmlFor="name" className="form-label">Name:</label>
+            <input
+              type="text"
+              id="name"
+              className="form-control"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">Email:</label>
+            <input
+              type="email"
+              id="email"
+              className="form-control"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">Password:</label>
+            <div className="input-group">
+              <input
+                type={passwordVisible ? "text" : "password"}
+                id="password"
+                className="form-control"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <div className="input-group-append">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={togglePasswordVisibility}
+                >
+                  <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
+                </button>
+              </div>
             </div>
-            <div>
-                <Message type={type} text={message}/>
-            </div>
-        </>
-    );
+          </div>
+          <button type="submit" className="btn btn-primary">Register</button>
+        </form>
+      </div>
+      <div>
+        <Message type={type} text={message} />
+      </div>
+    </>
+  );
 };
 
 export default RegisterForm;
