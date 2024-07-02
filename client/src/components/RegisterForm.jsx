@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import styles from '../styles/Home.module.css';
 import Message from './Message';
 import { useRouter } from 'next/router';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
@@ -12,6 +14,7 @@ const RegisterForm = () => {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const [type, setType] = useState('info');
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -45,7 +48,7 @@ const RegisterForm = () => {
                 setUsername('');
                 setEmail('');
                 setPassword('');
-                await router.push('/dashboard/');
+                await router.push(redirect);
             }
 
 
@@ -54,6 +57,10 @@ const RegisterForm = () => {
             setType("error")
             console.error('Error registering user:', error.message);
         }
+    };
+
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible);
     };
 
     return (
@@ -82,13 +89,24 @@ const RegisterForm = () => {
                     </div>
                     <div className="mb-3">
                         <label htmlFor="password" className="form-label">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            className="form-control"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+                        <div className="input-group">
+                            <input
+                                type={passwordVisible ? "text" : "password"}
+                                id="password"
+                                className="form-control"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <div className="input-group-append">
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-secondary"
+                                    onClick={togglePasswordVisibility}
+                                >
+                                    <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <button type="submit" className="btn btn-primary">Register</button>
                 </form>

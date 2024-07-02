@@ -27,7 +27,7 @@ class UserRegistrationAPIView(APIView):
             user = User.objects.get(email=email)
             token = Token.objects.create(user=user)
             print(token.key)
-            return Response({'message': 'User registered successfully', 'redirect': 'dashboard/', 'token': token.key},
+            return Response({'message': 'User registered successfully', 'redirect': '/dashboard/', 'token': token.key},
                             status=status.HTTP_201_CREATED)
         return Response({'error': f'{serializer.errors}'}, status=status.HTTP_400_BAD_REQUEST)
 
