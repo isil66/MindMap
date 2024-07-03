@@ -14,6 +14,7 @@ class UserCreationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # objects is the manager of user model
         # create_user çağır so that the password is hashed and not stored directly on db
+        print("i am called in create serailizer")
         user = User.objects.create_user(**validated_data)
         return user
 

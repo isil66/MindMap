@@ -42,6 +42,8 @@ const RegisterForm = () => {
             } else {
                 const responseJson = await response.json();
                 const redirect = responseJson.redirect;
+                const token = responseJson.token;
+                localStorage.setItem('authToken', token);
                 setMessage('Registered successfully!');
                 setType("success")
                 console.log('User registered successfully!');

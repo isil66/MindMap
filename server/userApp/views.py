@@ -5,9 +5,14 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from .serializers import UserCreationSerializer, UserLoginSerializer
 from django.shortcuts import get_object_or_404
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 class UserListAPIView(APIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         users = User.objects.all()
         data = [{'username': user.username, 'email': user.email} for user in users]
@@ -22,11 +27,11 @@ class UserRegistrationAPIView(APIView):
             email = serializer.validated_data['email']
             if User.objects.filter(email=email).exists():
                 return Response({'error': 'A user with that email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-
+            print("about to save user")
             serializer.save()
             user = User.objects.get(email=email)
             token = Token.objects.create(user=user)
-            print(token.key)
+            print(token)
             return Response({'message': 'User registered successfully', 'redirect': '/dashboard/', 'token': token.key},
                             status=status.HTTP_201_CREATED)
         return Response({'error': f'{serializer.errors}'}, status=status.HTTP_400_BAD_REQUEST)
