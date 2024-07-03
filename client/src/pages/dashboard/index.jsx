@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Message from "@/components/Message";
+import Projects from "@/components/Project";
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 

@@ -50,5 +50,6 @@ class LoginAPIView(APIView):
             if not user.check_password(serializer.validated_data['password']):
                 return Response({'error': 'Incorrect password.'}, status=status.HTTP_400_BAD_REQUEST)
             token, created = Token.objects.get_or_create(user=user)
-            Response({'message': 'Welcome.', 'token': token.key}, status=status.HTTP_200_OK)
-        return Response({'error': 'Please fill all the fields.'}, status=status.HTTP_400_BAD_REQUEST)
+            print(token.key)
+            return Response({'message': 'Welcome.', 'redirect': '/dashboard/', 'token': token.key}, status=status.HTTP_200_OK)
+        return Response({'error': 'Please fill all the fields.'}, status=status.HTTP_226_IM_USED)
