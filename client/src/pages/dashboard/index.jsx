@@ -1,24 +1,22 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
+import Message from "@/components/Message";
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
 const Page = () => {
     const [message, setMessage] = useState('');
     const [type, setType] = useState('info');
-    const [token, setToken] = useState(null);
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const storedToken = localStorage.getItem('authToken');
-                console.log("token", storedToken)
-                if (storedToken) {
-                    setToken(storedToken);
-                }
+
                 const response = await fetch(`${BASE_URL}/dashboard/`, {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Token ${token}`
+                        'Authorization': `Token ${storedToken}`
                     }
                 });
 
@@ -29,10 +27,9 @@ const Page = () => {
                     setType("error");
                 } else {
                     const responseJson = await response.json();
-                    const redirect = responseJson.redirect;
-                    setMessage('Hi');
+                    setMessage('Successfully fetched dashboard data');
                     setType("success");
-                    console.log('Dashboard');
+                    console.log('Dashboard data:', responseJson);
                 }
             } catch (error) {
                 setMessage(`Error: ${error.message}`);
@@ -46,7 +43,8 @@ const Page = () => {
 
     return (
         <div>
-            <div>Hello</div>
+            <h1>Dashboard</h1>
+            <div><Message type={type} text={message} /></div>
         </div>
     );
 };
