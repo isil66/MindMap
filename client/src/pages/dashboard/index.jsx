@@ -4,9 +4,8 @@ import FolderIconSvg from '../../../public/folder-svgrepo-com.svg';
 import Image from 'next/image';
 import {Grid, Paper, Button, Stack, TextField} from '@mui/material';
 import {createSvgIcon} from '@mui/material/utils';
-import style from '../../styles/FolderIcon.module.css'
+import style from '../../styles/FolderIcon.module.css';
 import {useRouter} from 'next/router';
-
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
@@ -29,7 +28,6 @@ const FolderIcon = ({project}) => {
     const handleClick = () => {
         router.push('/register/'); //todo get the prj link: user bu projeye sahip mi diye bak backende tokenden
     };
-    console.log(project)
     return (
         <div className={style.folderIconContainer} onClick={handleClick}>
             <FolderIconSvg/>
@@ -37,7 +35,6 @@ const FolderIcon = ({project}) => {
         </div>
     );
 };
-
 
 const Page = () => {
     const [message, setMessage] = useState('');
@@ -103,6 +100,7 @@ const Page = () => {
                 setMessage('Project created successfully');
                 setType('success');
                 setNewProjectName('');
+                setCreateOn(false);
                 fetchData(); // Fetch updated projects
             }
         } catch (error) {
@@ -116,17 +114,41 @@ const Page = () => {
     }, []); // Empty dependency array ensures useEffect runs only once
 
     return (
-        <div>
+        <>
             <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="center">
                 <h1>Dashboard</h1>
-                <Button variant="contained" href="#contained-buttons" size="large" endIcon={<PlusIcon/>}
+                {!createOn ? (
+                    <Button
+                        variant="contained"
+                        size="large"
+                        endIcon={<PlusIcon/>}
                         onClick={() => {
-                            setCreateOn(!createOn)
-                        }}>
-                    New Project
-                </Button>
-            </Stack>
+                            setCreateOn(true);
+                        }}
+                    >
+                        New Project
+                    </Button>
+                ) : (
+                    <Stack direction="column" spacing={2} alignItems="center">
+                        <TextField
+                            id="outlined-basic"
+                            label="Name of your new project"
+                            variant="outlined"
+                            value={newProjectName}
+                            onChange={(e) => setNewProjectName(e.target.value)}
+                        />
+                        <Stack direction="row" spacing={2} alignItems="center">
+                            <Button variant="contained" size="small" onClick={handleCreateProject}>
+                                Create
+                            </Button>
+                            <Button variant="text" size="small" onClick={() => setCreateOn(false)}>
+                                Cancel
+                            </Button>
+                        </Stack>
 
+                    </Stack>
+                )}
+            </Stack>
             <Grid container justifyContent="right" alignItems="flex-end" spacing={{xs: 2, md: 1}}
                   columns={{xs: 4, sm: 8, md: 8}}>
                 {projects.map((project, index) => (
@@ -135,7 +157,7 @@ const Page = () => {
                     </Grid>
                 ))}
             </Grid>
-        </div>
+        </>
     );
 };
 
