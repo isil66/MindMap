@@ -1,8 +1,21 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import Message from "@/components/Message";
 import Projects from "@/components/Project";
+import FolderIconSvg from '../../../public/folder-svgrepo-com.svg';
+import Image from "next/image";
+import style from "../../styles/FolderIcon.module.css"
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
+
+const FolderIcon = () => {
+    return (
+        <div className={style.folderIconContainer}>
+            <FolderIconSvg/>
+            <div className={style.overlayTextProjectName}>Prj</div>
+             <div className={style.overlayTextCreationDate}>creation date: 04.07.2024</div>
+        </div>
+    );
+};
 
 const Page = () => {
     const [message, setMessage] = useState('');
@@ -44,8 +57,11 @@ const Page = () => {
 
     return (
         <div>
+
             <h1>Dashboard</h1>
-            <div><Message type={type} text={message} /></div>
+            <div><Message type={type} text={message}/></div>
+            <FolderIcon/>
+
         </div>
     );
 };

@@ -1,0 +1,25 @@
+.folderIconContainer {
+    position: relative;
+    width: 100px; /* Adjust dimensions as per your SVG size */
+    height: 100px; /* Adjust dimensions as per your SVG size */
+}
+
+.overlayTextProjectName {
+    color: #565353;
+    position: absolute;
+    top: 14%;
+    right: 7%;
+    padding: 0.5em 0.5em; /* Adjust padding as needed */
+    border-radius: 5px;
+    font-size: 1rem; /* Example of using rem unit */
+}
+
+.overlayTextCreationDate {
+    color: #565353;
+    position: absolute;
+    top: 19%;
+    left: 0%;
+    padding: 0.5em 1em; /* Adjust padding as needed */
+    border-radius: 5px;
+    font-size: 1rem; /* Example of using rem unit */
+}

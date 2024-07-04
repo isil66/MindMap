@@ -17,6 +17,7 @@ class ProjectListAPIView(ListAPIView):
         return DocumentProject.objects.filter(owner=user)
 
     def list(self, request, *args, **kwargs):
+        print(request.user.is_authenticated)
         queryset = self.get_queryset()
         serializer = ProjectSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
