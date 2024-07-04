@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Message from '@/components/Message';
 import FolderIconSvg from '../../../public/folder-svgrepo-com.svg';
-import Image from 'next/image';
-import {Grid, Paper, Button, Stack, TextField} from '@mui/material';
+import {Grid, Button, Stack, TextField, Box} from '@mui/material';
 import {createSvgIcon} from '@mui/material/utils';
 import style from '../../styles/FolderIcon.module.css';
 import {useRouter} from 'next/router';
@@ -26,12 +25,12 @@ const PlusIcon = createSvgIcon(
 const FolderIcon = ({project}) => {
     const router = useRouter();
     const handleClick = () => {
-        router.push('/register/'); //todo get the prj link: user bu projeye sahip mi diye bak backende tokenden
+        router.push('/register/'); // TODO: Get the project link: Check if the user owns this project in the backend from the token
     };
     return (
         <div className={style.folderIconContainer} onClick={handleClick}>
             <FolderIconSvg/>
-            <div className={style.overlayTextCreationDate}>{project["prj_name"]}</div>
+            <div className={style.overlayTextCreationDate}>{project['prj_name']}</div>
         </div>
     );
 };
@@ -114,41 +113,59 @@ const Page = () => {
     }, []); // Empty dependency array ensures useEffect runs only once
 
     return (
-        <>
-            <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="center">
+        <Stack spacing={2}>
+            <Box></Box>
+            <Box></Box>
+            <Box display="flex" justifyContent="center" alignItems="center">
                 <h1>Dashboard</h1>
-                {!createOn ? (
-                    <Button
-                        variant="contained"
-                        size="large"
-                        endIcon={<PlusIcon/>}
-                        onClick={() => {
-                            setCreateOn(true);
-                        }}
-                    >
-                        New Project
-                    </Button>
-                ) : (
-                    <Stack direction="column" spacing={2} alignItems="center">
-                        <TextField
-                            id="outlined-basic"
-                            label="Name of your new project"
-                            variant="outlined"
-                            value={newProjectName}
-                            onChange={(e) => setNewProjectName(e.target.value)}
-                        />
-                        <Stack direction="row" spacing={2} alignItems="center">
-                            <Button variant="contained" size="small" onClick={handleCreateProject}>
-                                Create
-                            </Button>
-                            <Button variant="text" size="small" onClick={() => setCreateOn(false)}>
-                                Cancel
-                            </Button>
-                        </Stack>
-
-                    </Stack>
-                )}
-            </Stack>
+                <Box ml={2}>
+                    {!createOn ? (
+                        <Button
+                            variant="contained"
+                            size="large"
+                            endIcon={<PlusIcon/>}
+                            onClick={() => {
+                                setCreateOn(true);
+                            }}
+                        >
+                            New Project
+                        </Button>
+                    ) : (
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: '20%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                bgcolor: 'background.paper',
+                                boxShadow: 24,
+                                p: 4,
+                                borderRadius: 1,
+                                zIndex: 1300,// z index higher olunca pop up gibi üstte gözükiy
+                            }}
+                        >
+                            <Stack direction="column" spacing={2} alignItems="center">
+                                <TextField
+                                    id="outlined-basic"
+                                    label="Name of your new project"
+                                    variant="outlined"
+                                    value={newProjectName}
+                                    size="small"
+                                    onChange={(e) => setNewProjectName(e.target.value)}
+                                />
+                                <Stack direction="row" spacing={2} alignItems="center">
+                                    <Button variant="contained" size="small" onClick={handleCreateProject}>
+                                        Create
+                                    </Button>
+                                    <Button variant="text" size="small" onClick={() => setCreateOn(false)}>
+                                        Cancel
+                                    </Button>
+                                </Stack>
+                            </Stack>
+                        </Box>
+                    )}
+                </Box>
+            </Box>
             <Grid container justifyContent="right" alignItems="flex-end" spacing={{xs: 2, md: 1}}
                   columns={{xs: 4, sm: 8, md: 8}}>
                 {projects.map((project, index) => (
@@ -157,7 +174,7 @@ const Page = () => {
                     </Grid>
                 ))}
             </Grid>
-        </>
+        </Stack>
     );
 };
 
