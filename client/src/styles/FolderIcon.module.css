@@ -2,7 +2,11 @@
     position: relative;
     width: 150px; /* Adjust dimensions as per your SVG size */
     height: 150px; /* Adjust dimensions as per your SVG size */
+    cursor: pointer; /*indicate element is clickable*/
+}
 
+.folderIconContainer:hover svg {
+    filter: brightness(0.8); /*the svg tag means only darken that, if its not there apply to all child elements */
 }
 
 .overlayTextProjectName {

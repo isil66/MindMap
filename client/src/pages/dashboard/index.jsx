@@ -5,6 +5,7 @@ import Image from 'next/image';
 import {Grid, Paper, Button, Stack, TextField} from '@mui/material';
 import {createSvgIcon} from '@mui/material/utils';
 import style from '../../styles/FolderIcon.module.css'
+import {useRouter} from 'next/router';
 
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
@@ -24,9 +25,13 @@ const PlusIcon = createSvgIcon(
 );
 
 const FolderIcon = ({project}) => {
+    const router = useRouter();
+    const handleClick = () => {
+        router.push('/register/'); //todo get the prj link: user bu projeye sahip mi diye bak backende tokenden
+    };
     console.log(project)
     return (
-        <div className={style.folderIconContainer}>
+        <div className={style.folderIconContainer} onClick={handleClick}>
             <FolderIconSvg/>
             <div className={style.overlayTextCreationDate}>{project["prj_name"]}</div>
         </div>
