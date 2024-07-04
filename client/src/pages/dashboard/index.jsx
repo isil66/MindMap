@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Message from '@/components/Message';
 import FolderIconSvg from '../../../public/folder-svgrepo-com.svg';
 import Image from 'next/image';
-import {Grid, Paper, Button, Stack} from '@mui/material';
+import {Grid, Paper, Button, Stack, TextField} from '@mui/material';
 import {createSvgIcon} from '@mui/material/utils';
 import style from '../../styles/FolderIcon.module.css'
 
@@ -33,61 +33,91 @@ const FolderIcon = ({project}) => {
     );
 };
 
-const Folder = ({project}) => {
-    console.log(project)
-    return (
-        <Paper elevation={0} className={style.folderIconContainer}>
-            <FolderIconSvg/>
-            <div className={style.overlayTextProjectName}>{project["prj_name"]}</div>
-            <div className={style.overlayTextCreationDate}>creation date: {project["creation_date"]}</div>
-        </Paper>
-    );
-};
 
 const Page = () => {
     const [message, setMessage] = useState('');
     const [type, setType] = useState('info');
     const [projects, setProjects] = useState([]);
+    const [newProjectName, setNewProjectName] = useState('');
+    const [createOn, setCreateOn] = useState(false);
+
+    const fetchData = async () => {
+        try {
+            const storedToken = localStorage.getItem('authToken');
+
+            const response = await fetch(`${BASE_URL}/dashboard/`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Token ${storedToken}`,
+                },
+            });
+
+            if (!response.ok) {
+                const responseJson = await response.json();
+                const errorMessage = responseJson.error;
+                setMessage(errorMessage);
+                setType('error');
+            } else {
+                const responseJson = await response.json();
+                setMessage('Successfully fetched dashboard data');
+                setType('success');
+                setProjects(responseJson); // Assuming responseJson is an array of project objects
+                console.log('Dashboard data:', responseJson);
+            }
+        } catch (error) {
+            setMessage(`Error: ${error.message}`);
+            setType('error');
+            console.error('Error fetching dashboard data:', error.message);
+        }
+    };
+
+    const handleCreateProject = async () => {
+        if (!newProjectName) {
+            setMessage('Project name cannot be empty');
+            setType('error');
+            return;
+        }
+
+        try {
+            const storedToken = localStorage.getItem('authToken');
+            const response = await fetch(`${BASE_URL}/dashboard/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Token ${storedToken}`,
+                },
+                body: JSON.stringify({prj_name: newProjectName, creation_date: new Date().toISOString().split('T')[0]}),
+            });
+
+            if (!response.ok) {
+                const responseJson = await response.json();
+                const errorMessage = responseJson.error;
+                setMessage(errorMessage);
+                setType('error');
+            } else {
+                setMessage('Project created successfully');
+                setType('success');
+                setNewProjectName('');
+                fetchData(); // Fetch updated projects
+            }
+        } catch (error) {
+            setMessage(`Error: ${error.message}`);
+            setType('error');
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const storedToken = localStorage.getItem('authToken');
-
-                const response = await fetch(`${BASE_URL}/dashboard/`, {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Token ${storedToken}`,
-                    },
-                });
-
-                if (!response.ok) {
-                    const responseJson = await response.json();
-                    const errorMessage = responseJson.error;
-                    setMessage(errorMessage);
-                    setType('error');
-                } else {
-                    const responseJson = await response.json();
-                    setMessage('Successfully fetched dashboard data');
-                    setType('success');
-                    setProjects(responseJson); // Assuming responseJson is an array of project objects
-                    console.log('Dashboard data:', responseJson);
-                }
-            } catch (error) {
-                setMessage(`Error: ${error.message}`);
-                setType('error');
-                console.error('Error fetching dashboard data:', error.message);
-            }
-        };
-
         fetchData();
     }, []); // Empty dependency array ensures useEffect runs only once
 
     return (
         <div>
-            <Stack direction="row" spacing={5}  alignItems="flex-start"  justifyContent="center">
+            <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="center">
                 <h1>Dashboard</h1>
-                <Button variant="contained" href="#contained-buttons" size="large" endIcon={<PlusIcon/>}>
+                <Button variant="contained" href="#contained-buttons" size="large" endIcon={<PlusIcon/>}
+                        onClick={() => {
+                            setCreateOn(!createOn)
+                        }}>
                     New Project
                 </Button>
             </Stack>
