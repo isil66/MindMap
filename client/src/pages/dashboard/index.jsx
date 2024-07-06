@@ -87,7 +87,7 @@ const Page = () => {
                     'Content-Type': 'application/json',
                     Authorization: `Token ${storedToken}`,
                 },
-                body: JSON.stringify({prj_name: newProjectName, creation_date: new Date().toISOString().split('T')[0]}),
+                body: JSON.stringify({prj_name: newProjectName}),
             });
 
             if (!response.ok) {

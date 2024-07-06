@@ -1,14 +1,15 @@
 from django.contrib.auth.models import User
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import ProjectSerializer
+from .serializers import ProjectSerializer, ProjectCreateSerializer
 from .models import DocumentProject
+from django.utils import timezone
 
 
-class ProjectListAPIView(ListAPIView):
+class ProjectListAPIView(ListCreateAPIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -21,3 +22,14 @@ class ProjectListAPIView(ListAPIView):
         queryset = self.get_queryset()
         serializer = ProjectSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()  # to not modify original data
+        print("data printing: ", data)
+        data['owner'] = request.user.id
+        data['creation_date'] = timezone.now().date()
+        serializer = ProjectCreateSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
