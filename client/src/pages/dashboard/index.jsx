@@ -24,8 +24,9 @@ const PlusIcon = createSvgIcon(
 
 const FolderIcon = ({project}) => {
     const router = useRouter();
+    const prj_id = project['id'];
     const handleClick = () => {
-        router.push('/register/'); // TODO: Get the project link: Check if the user owns this project in the backend from the token
+        router.push(`/dashboard/project/${prj_id}/`); // TODO: Get the project link: Check if the user owns this project in the backend from the token
     };
     return (
         <div className={style.folderIconContainer} onClick={handleClick}>
@@ -63,7 +64,7 @@ const Page = () => {
                 setMessage('Successfully fetched dashboard data');
                 setType('success');
                 setProjects(responseJson); // Assuming responseJson is an array of project objects
-                console.log('Dashboard data:', responseJson);
+
             }
         } catch (error) {
             setMessage(`Error: ${error.message}`);
