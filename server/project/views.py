@@ -10,7 +10,7 @@ from django.utils import timezone
 from .permissions import IsOwner
 
 
-class ProjectListAPIView(viewsets.ModelViewSet):
+class ProjectAPIView(viewsets.ModelViewSet):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = DocumentProject.objects.all()
@@ -31,15 +31,3 @@ class ProjectListAPIView(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class ProjectDetailAPIView(viewsets.ModelViewSet):
-    authentication_classes = [SessionAuthentication, TokenAuthentication]
-    permission_classes = [IsOwner, IsAuthenticated]
-    queryset = DocumentProject.objects.all()
-    serializer_class = ProjectSerializer
-
-    def retrieve(self, request, *args, **kwargs):
-        print("i am called prj detail")
-        instance = self.get_object()
-        print(instance)
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data,status=status.HTTP_200_OK)
