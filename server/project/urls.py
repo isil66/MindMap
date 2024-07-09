@@ -1,7 +1,11 @@
-from django.urls import path
+from django.urls import path, include
 from .views import ProjectListAPIView, ProjectDetailAPIView
 
+from rest_framework import routers
+
+router = routers.SimpleRouter()
+router.register(r"", ProjectListAPIView, basename="dashboard")
+router.register(r"project/", ProjectDetailAPIView, basename="dashboard/prj")
 urlpatterns = [
-    path("", ProjectListAPIView.as_view(), name="dashboard"),
-    path("project/<int:pk>", ProjectDetailAPIView.as_view(), name="project_detail"),
+    path('', include(router.urls)),
 ]

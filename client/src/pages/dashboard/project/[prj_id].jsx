@@ -16,34 +16,11 @@ const ProjectPage = () => {
     //   (async () => getResponse())();
     // });
 
-    const fetchProjectDetails = async (prj_id) => {
-        try {
-            const storedToken = localStorage.getItem('authToken');
-            const response = await fetch(`${BASE_URL}/dashboard/project/${prj_id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Token ${storedToken}`,
-                },
-            });
-            if (!response.ok) {
-                //const responseJson = await response.json();
-                //const errorMessage = responseJson.error;
-
-            } else {
-                console.log("succes");
-            }
-        } catch (error) {
-            console.log("err yedük yakala", error);
-        }
-    };
-
-
     useEffect(() => {
         (async () => {
             try {
                 const storedToken = localStorage.getItem('authToken');
-                const response = await fetch(`${BASE_URL}/dashboard/project/${prj_id}`, {
+                const response = await fetch(`${BASE_URL}/dashboard/${prj_id}/`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -56,6 +33,8 @@ const ProjectPage = () => {
 
                 } else {
                     console.log("succes");
+                    const responseJson = await response.json();
+                    console.log(responseJson);
                 }
             } catch (error) {
                 console.log("err yedük yakala", error);
