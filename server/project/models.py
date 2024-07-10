@@ -12,4 +12,4 @@ class DocumentProject(models.Model):
 class Page(models.Model):
     project = models.ForeignKey(DocumentProject, on_delete=models.CASCADE)
     content = models.TextField()
-    last_modified = models.DateField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now_add=True)

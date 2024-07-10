@@ -62,7 +62,7 @@ const Toolbar = ({editor, content}) => {
 
     return (
         <div style={{display: "flex", justifyContent: "center", margin: "10px 0"}} className={styles.toolbar}>
-            <Tooltip title="Bold">
+            <Tooltip title="Bold" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={(e) => {
@@ -72,7 +72,7 @@ const Toolbar = ({editor, content}) => {
                     <Bold/>
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Italic">
+            <Tooltip title="Italic" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={(e) => {
@@ -82,7 +82,7 @@ const Toolbar = ({editor, content}) => {
                     <Italic/>
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Underline">
+            <Tooltip title="Underline" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={(e) => {
@@ -92,7 +92,7 @@ const Toolbar = ({editor, content}) => {
                     <Underline/>
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Strikethrough">
+            <Tooltip title="Strikethrough" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={(e) => {
@@ -102,7 +102,7 @@ const Toolbar = ({editor, content}) => {
                     <Strikethrough/>
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Highlight">
+            <Tooltip title="Highlight" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={(e) => {
@@ -112,14 +112,14 @@ const Toolbar = ({editor, content}) => {
                     <Highlighter/>
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Take Note">
+            <Tooltip title="Take Note" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={handleClick}>
                     <StickyNote/>
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Heading 1">
+            <Tooltip title="Heading 1" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={(e) => {
@@ -129,7 +129,7 @@ const Toolbar = ({editor, content}) => {
                     <Heading1/>
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Heading 2">
+            <Tooltip title="Heading 2" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={(e) => {
@@ -139,7 +139,7 @@ const Toolbar = ({editor, content}) => {
                     <Heading2/>
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Heading 3">
+            <Tooltip title="Heading 3" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={(e) => {
@@ -149,7 +149,7 @@ const Toolbar = ({editor, content}) => {
                     <Heading3/>
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Bullet List">
+            <Tooltip title="Bullet List" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={(e) => {
@@ -159,7 +159,7 @@ const Toolbar = ({editor, content}) => {
                     <List/>
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Ordered List">
+            <Tooltip title="Ordered List" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={(e) => {
@@ -169,7 +169,7 @@ const Toolbar = ({editor, content}) => {
                     <ListOrdered/>
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Code">
+            <Tooltip title="Code" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={(e) => {
@@ -179,7 +179,7 @@ const Toolbar = ({editor, content}) => {
                     <Code/>
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Undo">
+            <Tooltip title="Undo" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={(e) => {
@@ -189,7 +189,7 @@ const Toolbar = ({editor, content}) => {
                     <Undo/>
                 </IconButton>
             </Tooltip>
-            <Tooltip title="Redo">
+            <Tooltip title="Redo" placement="top">
                 <IconButton
                     style={buttonStyle}
                     onClick={(e) => {
