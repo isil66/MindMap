@@ -23,7 +23,7 @@ const ProjectPage = () => {
                     'Content-Type': 'application/json',
                     Authorization: `Token ${storedToken}`,
                 },
-                body: JSON.stringify( {content}),
+                body: JSON.stringify({content}),
             });
             if (!response.ok) {
                 //const responseJson = await response.json();
@@ -85,7 +85,19 @@ const ProjectPage = () => {
 
     return (
         <div>
-            <Button variant="contained" onClick={handleSave}>Save</Button>
+            <Button
+                variant="contained"
+                onClick={handleSave}
+                sx={{
+                    backgroundColor: '#621d9a', // Hex for purple
+                    '&:hover': {
+                        backgroundColor: '#4B0082', // Darker purple for hover
+                    },
+                }}
+            >
+                Save
+            </Button>
+
             <Tiptap content={content}
                     onChange={(newContent) => handleContentChange(newContent)}/>
         </div>)
