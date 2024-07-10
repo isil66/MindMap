@@ -46,6 +46,7 @@
     font-size: 0.8rem;
     gap: 0.5rem;
     margin: 0.5rem;
+    font-family: 'Playfair Display', serif;
 }
 
 .characterCount svg {
@@ -67,6 +68,7 @@
 }
 
 .editorContentWrapper {
+    font-family: 'Playfair Display', serif;
     position: relative;
     width: 100%;
     overflow-y: auto;
