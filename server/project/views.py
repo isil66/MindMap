@@ -40,7 +40,7 @@ class ProjectAPIView(viewsets.ModelViewSet):
         if not pages.exists():
             first_page_data = {
                 'project': instance.id,
-                'content': '<h1>Start Your Writing Journey</h1>'
+                'content': '<h1>Start Your Writing Journey</h1><p></p><p></p><p></p><p></p>'
             }
             first_page_serializer = PageSerializer(data=first_page_data)
             if first_page_serializer.is_valid():
@@ -58,3 +58,22 @@ class ProjectAPIView(viewsets.ModelViewSet):
         }
         # todo burda tüm prj page sayısını da çekip yolla?
         return Response(response_data, status=status.HTTP_200_OK)
+
+
+class PageView(viewsets.ModelViewSet):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = Page.objects.all()
+    serializer_class = PageSerializer
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        if serializer.is_valid():
+            print("serailizer valid")
+        else:
+            print("serailizer NOT valid")
+            return Response(serializer.data, status=status.HTTP_226_IM_USED)
+        serializer.save()
+        print("partial update")
+        return Response(serializer.data, status=status.HTTP_200_OK)

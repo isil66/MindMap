@@ -9,7 +9,7 @@ import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import CharacterCount from '@tiptap/extension-character-count';
 import styles from "../styles/Tiptap.module.css";
 import Paper from '@mui/material/Paper';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const limit = 280;
 const Tiptap = ({onChange, content}) => {
@@ -75,6 +75,10 @@ const Tiptap = ({onChange, content}) => {
         editable,
         extensions: [StarterKit, Underline, CustomHighlight, Highlight, HorizontalRule, CharacterCount.configure({limit})],
         content: {content},
+        onCreate({editor}) {
+
+            editor.commands.setContent(content);
+        },
         editorProps: {
             attributes: {
                 class: styles.editor,
@@ -100,7 +104,7 @@ const Tiptap = ({onChange, content}) => {
                     <Toolbar editor={editor} content={content}/>
                     <Paper>
                         <div className={styles.editorContentWrapper}>
-                            <EditorContent editor={editor} />
+                            <EditorContent editor={editor}/>
                         </div>
                     </Paper>
                     <div
