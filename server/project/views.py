@@ -37,8 +37,20 @@ class ProjectAPIView(viewsets.ModelViewSet):
         instance = self.get_object()  # get the prj w the spesified id
         pages = Page.objects.filter(project=instance).order_by('id')
 
+        if not pages.exists():
+            first_page_data = {
+                'project': instance.id,
+                'content': '<h1>Start Your Writing Journey</h1>'
+            }
+            first_page_serializer = PageSerializer(data=first_page_data)
+            if first_page_serializer.is_valid():
+                first_page_serializer.save()
+                pages = [first_page_serializer.instance]
+            else:
+                return Response(first_page_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         project_serializer = self.get_serializer(instance)
-        page_serializer = PageSerializer(pages, many=True)  # Assuming you have a PageSerializer defined
+        page_serializer = PageSerializer(pages, many=True)
 
         response_data = {
             'project': project_serializer.data,
@@ -46,3 +58,4 @@ class ProjectAPIView(viewsets.ModelViewSet):
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
+
