@@ -228,3 +228,15 @@
     transform: rotate(0deg);
   }
 }
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+}
+
+.typeAnimationContainer {
+    text-align: center;
+    white-space: pre-line;
+}
