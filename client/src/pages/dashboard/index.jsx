@@ -1,7 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import Message from '@/components/Message';
 import FolderIconSvg from '../../../public/folder-svgrepo-com.svg';
-import {Grid, Button, Stack, TextField, Box} from '@mui/material';
+import {
+    Grid,
+    Button,
+    Stack,
+    TextField,
+    Box,
+    Menu,
+    MenuItem,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
+} from '@mui/material';
 import {createSvgIcon} from '@mui/material/utils';
 import style from '../../styles/FolderIcon.module.css';
 import {useRouter} from 'next/router';
@@ -22,14 +35,21 @@ const PlusIcon = createSvgIcon(
     'Plus',
 );
 
-const FolderIcon = ({project}) => {
+const FolderIcon = ({project, onRightClick}) => {
     const router = useRouter();
     const prj_id = project['id'];
+
     const handleClick = () => {
-        router.push(`/dashboard/project/${prj_id}/`); // TODO: Get the project link: Check if the user owns this project in the backend from the token
+        router.push(`/dashboard/project/${prj_id}/`);
     };
+
+    const handleRightClick = (event) => {
+        event.preventDefault();
+        onRightClick(event, project);
+    };
+
     return (
-        <div className={style.folderIconContainer} onClick={handleClick}>
+        <div className={style.folderIconContainer} onClick={handleClick} onContextMenu={handleRightClick}>
             <FolderIconSvg/>
             <div className={style.overlayTextCreationDate}>{project['prj_name']}</div>
         </div>
@@ -42,6 +62,12 @@ const Page = () => {
     const [projects, setProjects] = useState([]);
     const [newProjectName, setNewProjectName] = useState('');
     const [createOn, setCreateOn] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedProject, setSelectedProject] = useState(null);
+    const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [renamedProjectName, setRenamedProjectName] = useState('');
+
 
     const fetchData = async () => {
         try {
@@ -63,7 +89,7 @@ const Page = () => {
                 const responseJson = await response.json();
                 setMessage('Successfully fetched dashboard data');
                 setType('success');
-                setProjects(responseJson); // Assuming responseJson is an array of project objects
+                setProjects(responseJson);
 
             }
         } catch (error) {
@@ -101,7 +127,84 @@ const Page = () => {
                 setType('success');
                 setNewProjectName('');
                 setCreateOn(false);
-                fetchData(); // Fetch updated projects
+                fetchData();
+            }
+        } catch (error) {
+            setMessage(`Error: ${error.message}`);
+            setType('error');
+        }
+    };
+
+    const handleRightClick = (event, project) => {
+        //event.currentTarget is the DOM element that was clickds
+        setAnchorEl(event.currentTarget);
+        setSelectedProject(project);
+    };
+
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
+
+    const handleRenameProject = () => {
+        setRenamedProjectName(selectedProject.prj_name);
+        setRenameDialogOpen(true);
+        handleCloseMenu();
+    };
+
+    const handleDeleteProject = () => {
+        setDeleteDialogOpen(true);
+        handleCloseMenu();
+    };
+
+    const handleRenameSubmit = async () => {
+        try {
+            const storedToken = localStorage.getItem('authToken');
+            const response = await fetch(`${BASE_URL}/dashboard/${selectedProject.id}/`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Token ${storedToken}`,
+                },
+                body: JSON.stringify({prj_name: renamedProjectName}),
+            });
+
+            if (!response.ok) {
+                const responseJson = await response.json();
+                const errorMessage = responseJson.error;
+                setMessage(errorMessage);
+                setType('error');
+            } else {
+                setMessage('Project renamed successfully');
+                setType('success');
+                setRenameDialogOpen(false);
+                fetchData();
+            }
+        } catch (error) {
+            setMessage(`Error: ${error.message}`);
+            setType('error');
+        }
+    };
+
+    const handleDeleteSubmit = async () => {
+        try {
+            const storedToken = localStorage.getItem('authToken');
+            const response = await fetch(`${BASE_URL}/dashboard/${selectedProject.id}/`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Token ${storedToken}`,
+                },
+            });
+
+            if (!response.ok) {
+                const responseJson = await response.json();
+                const errorMessage = responseJson.error;
+                setMessage(errorMessage);
+                setType('error');
+            } else {
+                setMessage('Project deleted successfully');
+                setType('success');
+                setDeleteDialogOpen(false);
+                fetchData();
             }
         } catch (error) {
             setMessage(`Error: ${error.message}`);
@@ -111,7 +214,7 @@ const Page = () => {
 
     useEffect(() => {
         fetchData();
-    }, []); // Empty dependency array ensures useEffect runs only once
+    }, []);
 
     return (
         <Stack spacing={2}>
@@ -142,7 +245,7 @@ const Page = () => {
                                 boxShadow: 24,
                                 p: 4,
                                 borderRadius: 1,
-                                zIndex: 1300,// z index higher olunca pop up gibi üstte gözükiy
+                                zIndex: 1300,
                             }}
                         >
                             <Stack direction="column" spacing={2} alignItems="center">
@@ -171,10 +274,58 @@ const Page = () => {
                   columns={{xs: 4, sm: 8, md: 8}}>
                 {projects.map((project, index) => (
                     <Grid item key={index} xs={12} sm={6} md={3} lg={3}>
-                        <FolderIcon project={project}/>
+                        <FolderIcon project={project} onRightClick={handleRightClick}/>
                     </Grid>
                 ))}
             </Grid>
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleCloseMenu}
+                PaperProps={{
+                    style: {
+                        maxHeight: 48 * 4.5,
+                        width: '20ch',
+                    },
+                }}
+            >
+                <MenuItem onClick={handleRenameProject}>Rename</MenuItem>
+                <MenuItem onClick={handleDeleteProject}>Delete</MenuItem>
+            </Menu>
+
+
+            <Dialog open={renameDialogOpen} onClose={() => setRenameDialogOpen(false)}>
+                <DialogTitle>Rename Project</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="newProjectName"
+                        label="New Project Name"
+                        type="text"
+                        fullWidth
+                        value={renamedProjectName}
+                        onChange={(e) => setRenamedProjectName(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setRenameDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={handleRenameSubmit} color="primary">Rename</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete the project {selectedProject?.prj_name}?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={handleDeleteSubmit} color="primary">Delete</Button>
+                </DialogActions>
+            </Dialog>
         </Stack>
     );
 };
