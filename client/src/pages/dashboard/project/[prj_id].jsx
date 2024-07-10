@@ -1,11 +1,15 @@
 import {useRouter} from 'next/router';
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import Tiptap from '../../../components/Tiptap'
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 const ProjectPage = () => {
+    const [content, setContent] = useState('');
     const router = useRouter();
     const {prj_id} = router.query;//gets the url and finds the dynamic id//NEED CURLY BRACES TO DESTRUCT
-
+    const handleContentChange = (reason) => {
+        setContent(reason)
+    }
 
     //An async function is really just syntax sugar for promises,
     // so when you call an async function, it's returning a promise.
@@ -35,6 +39,8 @@ const ProjectPage = () => {
                     console.log("succes");
                     const responseJson = await response.json();
                     console.log(responseJson);
+                    console.log("anaam", responseJson.pages[0].content)
+                    setContent(responseJson.pages[0].content)
                 }
             } catch (error) {
                 console.log("err yedük yakala", error);
@@ -42,6 +48,10 @@ const ProjectPage = () => {
         })();
     }, [prj_id]);
 
-    return <div>Hello {prj_id}</div>
+    if(!content)
+    {return null;}
+
+    return <Tiptap content={content}
+                   onChange={(newContent) => handleContentChange(newContent)}/>
 };
 export default ProjectPage;

@@ -56,6 +56,5 @@ class ProjectAPIView(viewsets.ModelViewSet):
             'project': project_serializer.data,
             'pages': page_serializer.data,
         }
-
+        # todo burda tüm prj page sayısını da çekip yolla?
         return Response(response_data, status=status.HTTP_200_OK)
-
