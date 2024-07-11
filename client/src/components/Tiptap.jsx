@@ -1,5 +1,5 @@
 "use client";
-
+import Head from "next/head";
 import {useEditor, EditorContent} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "./Toolbar";
@@ -101,6 +101,13 @@ const Tiptap = ({onChange, content}) => {
         <Paper elevation={10}>
             <div className={styles.isil}>
                 <div className={styles.container}>
+                    <Head>
+                         <title>MindMap Editor</title>
+                        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
+                        <link
+                            href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"/>
+                    </Head>
                     <Toolbar editor={editor} content={content}/>
                     <Paper>
                         <div className={styles.editorContentWrapper}>

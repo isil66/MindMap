@@ -7,6 +7,7 @@ export default function Home() {
         <div className={styles.pageContainer}>
             <div className={styles.container}>
                 <Head>
+                     <title>Welcome to MindMap</title>
                     <link rel="preconnect" href="https://fonts.googleapis.com"/>
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
                     <link
