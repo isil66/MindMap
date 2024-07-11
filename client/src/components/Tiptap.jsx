@@ -27,6 +27,7 @@ const Tiptap = ({
                     showAddButton,
                     onAddButtonClick,
                     onNextButtonClick,
+                    onPreviousButton,
                 }) => {
     const [editable, setEditable] = useState(true);//set editability for upcoming stuff
     const handleChange = (newContent) => {
@@ -35,17 +36,12 @@ const Tiptap = ({
     };
     // });
     useEffect(() => {
-        if(editor) {
+        if (editor) {
             editor.commands.setContent(content);
         }
     }, [pageIndex]);
 
-    const navigateToNextPage = () => {
-        onNextButtonClick();
-        console.log("aaa", pageIndex)
-        console.log("navigateNextfuncCalled", content);
-        editor.commands.setContent(content);
-    };
+
 
     const CustomHighlight = Highlight.extend({
         addCommands() {
@@ -180,6 +176,7 @@ const Tiptap = ({
                     Save
                 </Button>
                 {showPreviousButton ? (<IconButton
+                    onClick={onPreviousButton}
                     sx={{
                         backgroundColor: '#621d9a',
                         '&:hover': {
@@ -208,7 +205,7 @@ const Tiptap = ({
                         <AddCircleOutlineOutlinedIcon/>
                     </IconButton>
                 ) : (<IconButton
-                    onClick={navigateToNextPage}
+                    onClick={onNextButtonClick}
                     sx={{
                         backgroundColor: '#621d9a',
                         '&:hover': {

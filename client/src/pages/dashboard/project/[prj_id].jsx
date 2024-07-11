@@ -43,8 +43,14 @@ const ProjectPage = () => {
         console.log("pagesRef.current", pagesRef.current);
     };
 
-    const handleNext = () => {
+    const handlePrevious = () => {
+        contentRef.current = pagesRef.current[pageIndex - 1].content;
+        setContent(contentRef.current);
+        console.log("handle prev called", contentRef.current, content);
+        setPageIndex((prev) => prev - 1);
+    };
 
+    const handleNext = () => {
         contentRef.current = pagesRef.current[pageIndex + 1].content;
         setContent(contentRef.current);
         console.log("handle next called", contentRef.current, content);
@@ -73,6 +79,7 @@ const ProjectPage = () => {
                 // pages.current = [...pages, responseJson];
                 setTotalPageCount((prev) => prev + 1);
                 setPageIndex((prev) => prev + 1);
+                contentRef.current = responseJson.content;
                 setContent(responseJson.content);
             }
         } catch (error) {
@@ -153,8 +160,8 @@ const ProjectPage = () => {
                     console.log("anaam", responseJson.pages[pageIndex].content)
                     console.log("babam", responseJson.pages[pageIndex].id)
                     //setCurrentPageID(responseJson.pages[pageIndex].id);
-                    contentRef.current = responseJson.pages[0].content;
-                    setContent(responseJson.pages[0].content);
+                    contentRef.current = responseJson.pages[pageIndex].content;
+                    setContent(responseJson.pages[pageIndex].content);
                     setPages(responseJson.pages);
                     pagesRef.current = responseJson.pages;
                     setTotalPageCount(responseJson.total_page_count);
@@ -177,7 +184,8 @@ const ProjectPage = () => {
                     onChange={(newContent) => handleContentChange(newContent)}
                     pageIndex={pageIndex} totalPageCount={totalPageCount} onSave={handleSave}
                     showAddButton={pageIndex + 1 === totalPageCount} showPreviousButton={pageIndex !== 0}
-                    onAddButtonClick={handlePageCreation} onNextButtonClick={handleNext}/>
+                    onAddButtonClick={handlePageCreation} onNextButtonClick={handleNext}
+                    onPreviousButton={handlePrevious}/>
 
         </div>)
 };

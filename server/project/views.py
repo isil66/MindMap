@@ -102,7 +102,7 @@ class PageView(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         print("page creation")
         data = request.data.copy()  # to not modify original data
-        data['content'] = "<h2>Continue your journey...</h2>"
+        data['content'] = "<h2>Continue your journey...</h2><p></p><p></p><p></p>"
         serializer = PageCreateSerializer(data=data)
         print("data printing: ", data)
         serializer.is_valid(raise_exception=True)
