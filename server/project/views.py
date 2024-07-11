@@ -16,10 +16,28 @@ class ProjectAPIView(viewsets.ModelViewSet):
     queryset = DocumentProject.objects.all()
     serializer_class = ProjectSerializer
 
-    # dashboard/ GET
     def get_queryset(self):
         user = self.request.user
-        return DocumentProject.objects.filter(owner=user)
+        projects = DocumentProject.objects.filter(owner=user)
+        # field lookup için attr__func sql: where clause
+        # total_pages_of_user = Page.objects.filter(project__in=projects).count()
+        return projects
+
+    # dashboard/ GET
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        user = request.user
+        projects = DocumentProject.objects.filter(owner=user)
+        total_pages_of_user = Page.objects.filter(project__in=projects).count()
+
+        response_data = {
+            'projects': serializer.data,
+            'total_page_count': total_pages_of_user
+        }
+        print(response_data)
+        return Response(response_data, status=status.HTTP_200_OK)
 
     # dashboard/ POST
     def create(self, request, *args, **kwargs):

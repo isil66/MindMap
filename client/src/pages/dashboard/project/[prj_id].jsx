@@ -13,6 +13,9 @@ const ProjectPage = () => {
     const handleContentChange = (reason) => {
         setContent(reason)
     }
+    const handleNext = () => {
+
+    };
 
     const handleSave = async () => {
         try {

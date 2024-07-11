@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Message from '@/components/Message';
 import FolderIconSvg from '../../../public/folder-svgrepo-com.svg';
 import {
@@ -9,6 +9,7 @@ import {
     Box,
     Menu,
     MenuItem,
+    Tooltip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -57,6 +58,7 @@ const FolderIcon = ({project, onRightClick}) => {
 };
 
 const Page = () => {
+    const [totalPageCount, setTotalPageCount] = useState(0);
     const [message, setMessage] = useState('');
     const [type, setType] = useState('info');
     const [projects, setProjects] = useState([]);
@@ -89,7 +91,9 @@ const Page = () => {
                 const responseJson = await response.json();
                 setMessage('Successfully fetched dashboard data');
                 setType('success');
-                setProjects(responseJson);
+                console.log(responseJson.projects);
+                setProjects(responseJson.projects);
+                setTotalPageCount(responseJson.total_page_count);
 
             }
         } catch (error) {
@@ -220,8 +224,9 @@ const Page = () => {
         <Stack spacing={2}>
             <Box></Box>
             <Box></Box>
+
             <Box display="flex" justifyContent="center" alignItems="center">
-                <h1>Dashboard</h1>
+                <Box><Tooltip title={`You have a total of ${totalPageCount} pages in ${projects.length} projects`}><h1>Dashboard</h1></Tooltip></Box>
                 <Box ml={2}>
                     {!createOn ? (
                         <Button
