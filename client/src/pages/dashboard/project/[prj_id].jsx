@@ -90,22 +90,13 @@ const ProjectPage = () => {
 
     return (
         <div>
-            <Button
-                variant="contained"
-                onClick={handleSave}
-                sx={{
-                    backgroundColor: '#621d9a', // Hex for purple
-                    '&:hover': {
-                        backgroundColor: '#4B0082', // Darker purple for hover
-                    },
-                }}
-            >
-                Save
-            </Button>
+
 
             <Tiptap content={content}
-                    onChange={(newContent) => handleContentChange(newContent)}/>
-             <Box>you are in {pageIndex+1} of {totalPageCount}</Box>
+                    onChange={(newContent) => handleContentChange(newContent)}
+                    pageIndex={pageIndex} totalPageCount={totalPageCount} onSave={handleSave}
+                    showAddButton={pageIndex+1 === totalPageCount} showPreviousButton={pageIndex !== 0}/>
+
         </div>)
 };
 export default ProjectPage;

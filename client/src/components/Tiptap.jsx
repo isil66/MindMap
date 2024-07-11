@@ -9,10 +9,15 @@ import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import CharacterCount from '@tiptap/extension-character-count';
 import styles from "../styles/Tiptap.module.css";
 import Paper from '@mui/material/Paper';
+import NavigateNextOutlinedIcon from '@mui/icons-material/NavigateNextOutlined';
+import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import NavigateBeforeOutlinedIcon from '@mui/icons-material/NavigateBeforeOutlined';
 import {useEffect, useState} from "react";
+import {Button, IconButton} from "@mui/material";
 
 const limit = 280;
-const Tiptap = ({onChange, content}) => {
+const Tiptap = ({onChange, content, pageIndex, totalPageCount, onSave, showPreviousButton, showAddButton}) => {
     const [editable, setEditable] = useState(true);//set editability for upcoming stuff
     const handleChange = (newContent) => {
         console.log(newContent);
@@ -102,7 +107,7 @@ const Tiptap = ({onChange, content}) => {
             <div className={styles.isil}>
                 <div className={styles.container}>
                     <Head>
-                         <title>MindMap Editor</title>
+                        <title>MindMap Editor</title>
                         <link rel="preconnect" href="https://fonts.googleapis.com"/>
                         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
                         <link
@@ -134,8 +139,62 @@ const Tiptap = ({onChange, content}) => {
                         {editor.storage.characterCount.characters()} / {limit} characters
                         <br/>
                         {editor.storage.characterCount.words()} words
+                        <br/>
+                        Page {pageIndex + 1}/{totalPageCount}
                     </div>
                 </div>
+                <Button
+                    variant="contained"
+                    onClick={onSave}
+                    sx={{
+                        backgroundColor: '#621d9a', // Hex for purple
+                        '&:hover': {
+                            backgroundColor: '#4B0082', // Darker purple for hover
+                        },
+                        marginTop: '-50px',
+                    }}
+                >
+                    Save
+                </Button>
+                {showPreviousButton ? (<IconButton
+                    sx={{
+                        backgroundColor: '#621d9a',
+                        '&:hover': {
+                            backgroundColor: '#4B0082',
+                        },
+                        marginLeft: '500px',
+                        marginTop: '-40px',
+                    }}
+                >
+                    <NavigateBeforeOutlinedIcon></NavigateBeforeOutlinedIcon>
+                </IconButton>) : null}
+
+
+                {showAddButton ? (
+                    <IconButton
+                        sx={{
+                            backgroundColor: '#621d9a',
+                            '&:hover': {
+                                backgroundColor: '#4B0082',
+                            },
+                            marginLeft: '600px',
+                            marginTop: '-40px',
+                        }}
+                    >
+                        <AddCircleOutlineOutlinedIcon/>
+                    </IconButton>
+                ) : (<IconButton
+                    sx={{
+                        backgroundColor: '#621d9a',
+                        '&:hover': {
+                            backgroundColor: '#4B0082',
+                        },
+                        marginLeft: '600px',
+                        marginTop: '-40px',
+                    }}
+                >
+                    <NavigateNextOutlinedIcon/>
+                </IconButton>)}
             </div>
         </Paper>
     );
