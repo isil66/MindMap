@@ -44,6 +44,7 @@ const ProjectPage = () => {
     };
 
     const handlePrevious = () => {
+        handleSave();
         contentRef.current = pagesRef.current[pageIndex - 1].content;
         setContent(contentRef.current);
         console.log("handle prev called", contentRef.current, content);
@@ -51,6 +52,7 @@ const ProjectPage = () => {
     };
 
     const handleNext = () => {
+        handleSave();
         contentRef.current = pagesRef.current[pageIndex + 1].content;
         setContent(contentRef.current);
         console.log("handle next called", contentRef.current, content);
