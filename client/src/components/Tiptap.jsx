@@ -33,9 +33,16 @@ const Tiptap = ({
         console.log(newContent);
         onChange(newContent);
     };
+    // });
+    useEffect(() => {
+        if(editor) {
+            editor.commands.setContent(content);
+        }
+    }, [pageIndex]);
 
     const navigateToNextPage = () => {
         onNextButtonClick();
+        console.log("aaa", pageIndex)
         console.log("navigateNextfuncCalled", content);
         editor.commands.setContent(content);
     };

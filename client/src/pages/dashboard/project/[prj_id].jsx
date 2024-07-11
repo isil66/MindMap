@@ -15,6 +15,7 @@ const ProjectPage = () => {
     const [totalPageCount, setTotalPageCount] = useState(0);
     const [pages, setPages] = useState(null);
     const [content, setContent] = useState('');
+    const contentRef = useRef('');
     const router = useRouter();
     const {prj_id} = router.query;//gets the url and finds the dynamic id//NEED CURLY BRACES TO DESTRUCT
     const handleContentChange = (reason) => {
@@ -39,11 +40,14 @@ const ProjectPage = () => {
             pagesRef.current = newPages;
             setPages(newPages);
         }
-        console.log("pagesRef.current",pagesRef.current);
+        console.log("pagesRef.current", pagesRef.current);
     };
 
     const handleNext = () => {
-        setContent(pages[pageIndex + 1].content);
+
+        contentRef.current = pagesRef.current[pageIndex + 1].content;
+        setContent(contentRef.current);
+        console.log("handle next called", contentRef.current, content);
         setPageIndex((prev) => prev + 1);
     };
     const handlePageCreation = async () => {
@@ -120,6 +124,11 @@ const ProjectPage = () => {
     //useEffect(() => {
     //   (async () => getResponse())();
     // });
+    useEffect(() => {
+
+        setContent(contentRef.current);
+        console.log("pageIndex updated,", content);
+    }, [pageIndex]);
 
 
     useEffect(() => {
@@ -144,6 +153,7 @@ const ProjectPage = () => {
                     console.log("anaam", responseJson.pages[pageIndex].content)
                     console.log("babam", responseJson.pages[pageIndex].id)
                     //setCurrentPageID(responseJson.pages[pageIndex].id);
+                    contentRef.current = responseJson.pages[0].content;
                     setContent(responseJson.pages[0].content);
                     setPages(responseJson.pages);
                     pagesRef.current = responseJson.pages;
