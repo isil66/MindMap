@@ -25,12 +25,19 @@ const Tiptap = ({
                     onSave,
                     showPreviousButton,
                     showAddButton,
-                    onAddButtonClick
+                    onAddButtonClick,
+                    onNextButtonClick,
                 }) => {
     const [editable, setEditable] = useState(true);//set editability for upcoming stuff
     const handleChange = (newContent) => {
         console.log(newContent);
         onChange(newContent);
+    };
+
+    const navigateToNextPage = () => {
+        onNextButtonClick();
+        console.log("navigateNextfuncCalled", content);
+        editor.commands.setContent(content);
     };
 
     const CustomHighlight = Highlight.extend({
@@ -194,6 +201,7 @@ const Tiptap = ({
                         <AddCircleOutlineOutlinedIcon/>
                     </IconButton>
                 ) : (<IconButton
+                    onClick={navigateToNextPage}
                     sx={{
                         backgroundColor: '#621d9a',
                         '&:hover': {

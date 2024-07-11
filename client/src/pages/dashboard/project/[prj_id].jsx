@@ -1,10 +1,16 @@
 import {useRouter} from 'next/router';
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import Tiptap from '../../../components/Tiptap'
 import {Box, Button} from '@mui/material';
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
+
 const ProjectPage = () => {
+    const pagesRef = useRef([
+        {id: 1, content: 'Page 1 content'},
+        {id: 2, content: 'Page 2 content'},
+        {id: 3, content: 'Page 3 content'}
+    ]);
     const [pageIndex, setPageIndex] = useState(0);
     const [totalPageCount, setTotalPageCount] = useState(0);
     const [pages, setPages] = useState(null);
@@ -14,8 +20,31 @@ const ProjectPage = () => {
     const handleContentChange = (reason) => {
         setContent(reason)
     }
-    const handleNext = () => {
 
+    const appendPage = (newPage) => {
+        const currentPages = pagesRef.current;
+        if (Array.isArray(currentPages)) {
+            const newPages = [...currentPages, newPage];
+            pagesRef.current = newPages;
+            setPages(newPages);
+        }
+    };
+
+    const updatePageContent = (index, newContent) => {
+        const currentPages = pagesRef.current;
+        console.log("Array.isArray(currentPages)", Array.isArray(currentPages));
+        if (Array.isArray(currentPages) && index >= 0 && index < currentPages.length) {
+            const newPages = [...currentPages];
+            newPages[index] = {...newPages[index], content: newContent};
+            pagesRef.current = newPages;
+            setPages(newPages);
+        }
+        console.log("pagesRef.current",pagesRef.current);
+    };
+
+    const handleNext = () => {
+        setContent(pages[pageIndex + 1].content);
+        setPageIndex((prev) => prev + 1);
     };
     const handlePageCreation = async () => {
         try {
@@ -36,14 +65,29 @@ const ProjectPage = () => {
                 console.log("created page");
                 const responseJson = await response.json();
                 console.log(responseJson);
-                // setPages([...pages,responseJson])
+                appendPage(responseJson);//todo check
+                // pages.current = [...pages, responseJson];
+                setTotalPageCount((prev) => prev + 1);
+                setPageIndex((prev) => prev + 1);
+                setContent(responseJson.content);
             }
         } catch (error) {
             console.log("err yedük yakala", error);
         }
     };
 
+    // const updatePageContent = (index, newContent) => {
+    //     const newPages = [...pages.current];
+    //     console.log("newpages1", newPages);
+    //     if (index >= 0 && index < newPages.length) {
+    //         newPages[index] = {...newPages[index], content: newContent};
+    //         pages.current = newPages;
+    //     }
+    //     console.log("newpages2", pages.current);
+    // };
+
     const handleSave = async () => {
+        updatePageContent(pageIndex, content);
         try {
             const storedToken = localStorage.getItem('authToken');
             const response = await fetch(`${BASE_URL}/dashboard/page/${pages[pageIndex].id}/`, {
@@ -77,6 +121,7 @@ const ProjectPage = () => {
     //   (async () => getResponse())();
     // });
 
+
     useEffect(() => {
         (async () => {
             try {
@@ -101,6 +146,7 @@ const ProjectPage = () => {
                     //setCurrentPageID(responseJson.pages[pageIndex].id);
                     setContent(responseJson.pages[0].content);
                     setPages(responseJson.pages);
+                    pagesRef.current = responseJson.pages;
                     setTotalPageCount(responseJson.total_page_count);
                 }
             } catch (error) {
@@ -121,7 +167,7 @@ const ProjectPage = () => {
                     onChange={(newContent) => handleContentChange(newContent)}
                     pageIndex={pageIndex} totalPageCount={totalPageCount} onSave={handleSave}
                     showAddButton={pageIndex + 1 === totalPageCount} showPreviousButton={pageIndex !== 0}
-                    onAddButtonClick={handlePageCreation}/>
+                    onAddButtonClick={handlePageCreation} onNextButtonClick={handleNext}/>
 
         </div>)
 };
