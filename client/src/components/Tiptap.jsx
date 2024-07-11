@@ -14,7 +14,10 @@ import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutl
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import NavigateBeforeOutlinedIcon from '@mui/icons-material/NavigateBeforeOutlined';
 import {useEffect, useState} from "react";
-import {Button, IconButton} from "@mui/material";
+import {Button, CircularProgress, IconButton, Typography} from "@mui/material";
+import {useDebounce} from "@uidotdev/usehooks";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+
 
 const limit = 280;
 const Tiptap = ({
@@ -30,18 +33,29 @@ const Tiptap = ({
                     onPreviousButton,
                 }) => {
     const [editable, setEditable] = useState(true);//set editability for upcoming stuff
+    const debounceContent = useDebounce(content, 5000);
+    const [autosaveInProgress, setAutosaveInProgress] = useState(false);
     const handleChange = (newContent) => {
-        console.log(newContent);
+        console.log("content", content);
         onChange(newContent);
     };
-    // });
+    const handleAutosave = () => {
+        setAutosaveInProgress(true);
+        setTimeout(() => {
+            setAutosaveInProgress(false);
+        }, 2000);
+    };
     useEffect(() => {
         if (editor) {
             editor.commands.setContent(content);
         }
     }, [pageIndex]);
 
-
+    useEffect(() => {
+        console.log("autosave");
+        onSave();
+        handleAutosave();
+    }, [debounceContent]);
 
     const CustomHighlight = Highlight.extend({
         addCommands() {
@@ -162,19 +176,10 @@ const Tiptap = ({
                         Page {pageIndex + 1}/{totalPageCount}
                     </div>
                 </div>
-                <Button
-                    variant="contained"
-                    onClick={onSave}
-                    sx={{
-                        backgroundColor: '#621d9a', // Hex for purple
-                        '&:hover': {
-                            backgroundColor: '#4B0082', // Darker purple for hover
-                        },
-                        marginTop: '-50px',
-                    }}
-                >
-                    Save
-                </Button>
+                <Typography variant="body2" display="inline" style={{ fontFamily: 'Playfair Display, serif' , color: '#999999'}} sx={{marginLeft: '10px',marginTop: '-50px',}}>
+                   {autosaveInProgress ? 'Saving...' : 'Saved'} {autosaveInProgress ? <CircularProgress size={12}/> : <CheckCircleOutlineIcon fontSize={'1.5rem'} sx={{marginTop: '-3px',}} />}
+                </Typography>
+
                 {showPreviousButton ? (<IconButton
                     onClick={onPreviousButton}
                     sx={{
