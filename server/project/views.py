@@ -4,7 +4,7 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status, viewsets
-from .serializers import ProjectSerializer, ProjectCreateSerializer, PageSerializer
+from .serializers import ProjectSerializer, ProjectCreateSerializer, PageSerializer, PageCreateSerializer
 from .models import DocumentProject, Page
 from django.utils import timezone
 from .permissions import IsOwner
@@ -73,7 +73,7 @@ class ProjectAPIView(viewsets.ModelViewSet):
         response_data = {
             'project': project_serializer.data,
             'pages': page_serializer.data,
-            'total_page_count' :total_pages_in_project,
+            'total_page_count': total_pages_in_project,
         }
         # todo burda tüm prj page sayısını da çekip yolla?
         return Response(response_data, status=status.HTTP_200_OK)
@@ -97,3 +97,16 @@ class PageView(viewsets.ModelViewSet):
         serializer.save()
         print("partial update")
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    #  POST dashboard/page/
+    def create(self, request, *args, **kwargs):
+        print("page creation")
+        data = request.data.copy()  # to not modify original data
+        data['content'] = "<h2>Continue your journey...</h2>"
+        serializer = PageCreateSerializer(data=data)
+        print("data printing: ", data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        print("serailizer data:", serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

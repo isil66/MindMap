@@ -17,6 +17,31 @@ const ProjectPage = () => {
     const handleNext = () => {
 
     };
+    const handlePageCreation = async () => {
+        try {
+            const storedToken = localStorage.getItem('authToken');
+            const response = await fetch(`${BASE_URL}/dashboard/page/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Token ${storedToken}`,
+                },
+                body: JSON.stringify({project: prj_id}),
+            });
+            if (!response.ok) {
+                //const responseJson = await response.json();
+                //const errorMessage = responseJson.error;
+
+            } else {
+                console.log("created page");
+                const responseJson = await response.json();
+                console.log(responseJson);
+                // setPages([...pages,responseJson])
+            }
+        } catch (error) {
+            console.log("err yedük yakala", error);
+        }
+    };
 
     const handleSave = async () => {
         try {
@@ -95,7 +120,8 @@ const ProjectPage = () => {
             <Tiptap content={content}
                     onChange={(newContent) => handleContentChange(newContent)}
                     pageIndex={pageIndex} totalPageCount={totalPageCount} onSave={handleSave}
-                    showAddButton={pageIndex+1 === totalPageCount} showPreviousButton={pageIndex !== 0}/>
+                    showAddButton={pageIndex + 1 === totalPageCount} showPreviousButton={pageIndex !== 0}
+                    onAddButtonClick={handlePageCreation}/>
 
         </div>)
 };

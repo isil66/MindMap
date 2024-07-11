@@ -18,3 +18,9 @@ class PageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
         fields = ['id', 'project', 'content', 'last_modified']
+
+
+class PageCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Page
+        fields = ['id', 'project', 'content']

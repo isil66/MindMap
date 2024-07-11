@@ -17,7 +17,16 @@ import {useEffect, useState} from "react";
 import {Button, IconButton} from "@mui/material";
 
 const limit = 280;
-const Tiptap = ({onChange, content, pageIndex, totalPageCount, onSave, showPreviousButton, showAddButton}) => {
+const Tiptap = ({
+                    onChange,
+                    content,
+                    pageIndex,
+                    totalPageCount,
+                    onSave,
+                    showPreviousButton,
+                    showAddButton,
+                    onAddButtonClick
+                }) => {
     const [editable, setEditable] = useState(true);//set editability for upcoming stuff
     const handleChange = (newContent) => {
         console.log(newContent);
@@ -172,6 +181,7 @@ const Tiptap = ({onChange, content, pageIndex, totalPageCount, onSave, showPrevi
 
                 {showAddButton ? (
                     <IconButton
+                        onClick={onAddButtonClick}
                         sx={{
                             backgroundColor: '#621d9a',
                             '&:hover': {
