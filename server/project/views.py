@@ -36,7 +36,6 @@ class ProjectAPIView(viewsets.ModelViewSet):
             'projects': serializer.data,
             'total_page_count': total_pages_of_user
         }
-        print(response_data)
         return Response(response_data, status=status.HTTP_200_OK)
 
     # dashboard/ POST
@@ -54,6 +53,7 @@ class ProjectAPIView(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()  # get the prj w the spesified id
         pages = Page.objects.filter(project=instance).order_by('id')
+        total_pages_in_project = pages.count()
 
         if not pages.exists():
             first_page_data = {
@@ -73,6 +73,7 @@ class ProjectAPIView(viewsets.ModelViewSet):
         response_data = {
             'project': project_serializer.data,
             'pages': page_serializer.data,
+            'total_page_count' :total_pages_in_project,
         }
         # todo burda tüm prj page sayısını da çekip yolla?
         return Response(response_data, status=status.HTTP_200_OK)

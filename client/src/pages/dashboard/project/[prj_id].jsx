@@ -1,11 +1,12 @@
 import {useRouter} from 'next/router';
 import {useEffect, useState} from "react";
 import Tiptap from '../../../components/Tiptap'
-import {Button} from '@mui/material';
+import {Box, Button} from '@mui/material';
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 const ProjectPage = () => {
     const [pageIndex, setPageIndex] = useState(0);
+    const [totalPageCount, setTotalPageCount] = useState(0);
     const [pages, setPages] = useState(null);
     const [content, setContent] = useState('');
     const router = useRouter();
@@ -75,6 +76,7 @@ const ProjectPage = () => {
                     //setCurrentPageID(responseJson.pages[pageIndex].id);
                     setContent(responseJson.pages[0].content);
                     setPages(responseJson.pages);
+                    setTotalPageCount(responseJson.total_page_count);
                 }
             } catch (error) {
                 console.log("err yedük yakala", error);
@@ -103,6 +105,7 @@ const ProjectPage = () => {
 
             <Tiptap content={content}
                     onChange={(newContent) => handleContentChange(newContent)}/>
+             <Box>you are in {pageIndex+1} of {totalPageCount}</Box>
         </div>)
 };
 export default ProjectPage;
