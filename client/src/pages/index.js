@@ -9,11 +9,12 @@ const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
 export default function Home() {
     const router = useRouter();
+
     const handleLogin = async () => {
         await router.push("/login/");
     };
 
-    const handleSignIn = async () =>{
+    const handleSignIn = async () => {
         await router.push("/register/");
     };
 
@@ -58,15 +59,20 @@ export default function Home() {
                 </div>
 
             </div>
-            <div className={styles.buttonContainer}><AwesomeButton
-                onPress={handleLogin}
-                type="primary" style={{
-                buttonPrimaryColor: "#230a10",
-                height: "53px",
-                fontSize: "16px",
-                borderRadius: "10px",
-                primaryColor: "#00000"
-            }}>Login</AwesomeButton>
+            <div className={styles.buttonContainer}>
+                <AwesomeButton
+                    onPress={handleLogin}//kısa fonksiyonları buraya yazabilirsin
+                    type="primary"
+                    style={{
+                        buttonPrimaryColor: "#230a10",
+                        height: "53px",
+                        fontSize: "16px",
+                        borderRadius: "10px",
+                        primaryColor: "#00000"
+                    }}
+                >
+                    Login
+                </AwesomeButton>
                 <AwesomeButton
                     onPress={handleSignIn}
                     type="secondary" style={{
@@ -78,6 +84,5 @@ export default function Home() {
                 }}>Sign Up</AwesomeButton></div>
 
         </>
-    )
-        ;
+    );
 }

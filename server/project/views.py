@@ -100,13 +100,14 @@ class PageView(viewsets.ModelViewSet):
 
     #  POST dashboard/page/
     def create(self, request, *args, **kwargs):
-        print("page creation")
+
+        # use newlines and logical blocks
         data = request.data.copy()  # to not modify original data
         data['content'] = "<h2>Continue your journey...</h2><p></p><p></p><p></p>"
+
         serializer = PageCreateSerializer(data=data)
-        print("data printing: ", data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        print("serailizer data:", serializer.data)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

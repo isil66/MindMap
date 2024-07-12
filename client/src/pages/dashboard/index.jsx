@@ -81,6 +81,7 @@ const Page = () => {
                     Authorization: `Token ${storedToken}`,
                 },
             });
+            //burası resolve olana kadar bekliyor (fetch Promise'i resolve olana kadar)
 
             if (!response.ok) {
                 const responseJson = await response.json();
@@ -226,7 +227,8 @@ const Page = () => {
             <Box></Box>
 
             <Box display="flex" justifyContent="center" alignItems="center">
-                <Box><Tooltip title={`You have a total of ${totalPageCount} pages in ${projects.length} projects`}><h1>Dashboard</h1></Tooltip></Box>
+                <Box><Tooltip title={`You have a total of ${totalPageCount} pages in ${projects.length} projects`}>
+                    <h1>Dashboard</h1></Tooltip></Box>
                 <Box ml={2}>
                     {!createOn ? (
                         <Button

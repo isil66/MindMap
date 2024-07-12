@@ -45,6 +45,7 @@ const Tiptap = ({
             setAutosaveInProgress(false);
         }, 2000);
     };
+
     useEffect(() => {
         if (editor) {
             editor.commands.setContent(content);

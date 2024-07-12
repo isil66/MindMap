@@ -20,6 +20,7 @@ const Login = () => {
         event.preventDefault();
     };
 
+    //submit diye başlı başına bir fonksiyonality olabilir
     const handleSubmit = async (event) => {
         event.preventDefault();
 
