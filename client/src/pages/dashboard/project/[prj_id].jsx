@@ -6,6 +6,7 @@ import {Box, Button} from '@mui/material';
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
 const ProjectPage = () => {
+
     const pagesRef = useRef([
         {id: 1, content: 'Page 1 content'},
         {id: 2, content: 'Page 2 content'},
