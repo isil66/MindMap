@@ -37,14 +37,14 @@ const Toolbar = ({editor, content}) => {
         const newNoteId = noteIdRef.current + 1;
         noteIdRef.current = newNoteId;
 
-        editor.chain().focus().toggleHighlight({color: "#ffcc00", note_id: newNoteId}).run(); // Add color options
+        editor.chain().focus().toggleHighlight({color: "#500bb6", note_id: newNoteId}).run(); // Add color options
     };
 
     const handleClickTakeNoteEnd = (e) => {
         e.preventDefault();
         takeNoteRef.current = true;
 
-        editor.chain().focus().toggleHighlight({color: "#ffcc00", note_id: noteIdRef.current}).run(); // Add color options
+        editor.chain().focus().toggleHighlight({color: "#500bb6", note_id: noteIdRef.current}).run(); // Add color options
     };
 
     const handleClick = (e) => {
