@@ -121,4 +121,30 @@
     opacity: 1;
 }
 
-/* Base tooltip styles */
+.floatingMenu {
+    display: flex;
+    background-color: #e0e0e0; /* Assuming --gray-3 is a light gray color */
+    padding: 0.1rem;
+    border-radius: 0.5rem;
+}
+
+.floatingMenu button {
+    background-color: #FFFFFF;
+    padding: 0.275rem 0.425rem;
+    border-radius: 0.3rem;
+    border-color: #FFFFFF;
+}
+
+.floatingMenu button:hover {
+    background-color: #e0e0e0; /* Assuming --gray-3 is a light gray color */
+}
+
+.floatingMenu button.isActive {
+    background-color: #ffffff; /* Assuming --white is white */
+    color: #800080; /* Assuming --purple is purple */
+}
+
+.floatingMenu button.isActive:hover {
+    color: #ff00ff; /* Assuming --purple-contrast is a contrasting purple */
+}
+

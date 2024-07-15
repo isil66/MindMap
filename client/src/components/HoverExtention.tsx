@@ -1,18 +1,12 @@
-import {Extension} from '@tiptap/core'
-import {Plugin, PluginKey} from 'prosemirror-state'
-import Tooltip from '@mui/material/Tooltip';
-import {useRef} from "react";
-// @ts-ignore
-import NoteTooltip from './NoteToolTip'
-import ReactDOM from 'react-dom/client';
-import React from 'react';
+import {Extension} from '@tiptap/core';
+import {Plugin, PluginKey} from 'prosemirror-state';
+import tippy from 'tippy.js';
+//import 'tippy.js/dist/tippy.css'; // Import Tippy.js CSS
 
 export const HoverExtension = Extension.create({
   name: 'hover',
 
   addProseMirrorPlugins() {
-    let previousColor: string = '';
-
     return [
       new Plugin({
         key: new PluginKey('hover'),
@@ -20,51 +14,41 @@ export const HoverExtension = Extension.create({
           handleDOMEvents: {
             mouseover(view, event) {
               const target = event.target as HTMLElement;
-              if (target.tagName === 'MARK' && target.hasAttribute('note_id')
-                  && target.getAttribute('note_id') != '0') {
+              if (target.tagName === 'MARK' && target.hasAttribute('note_id') && target.getAttribute('note_id') !== '0') {
                 const noteId = target.getAttribute('note_id');
                 console.log('Hovered: ', noteId);
-                previousColor = target.style.backgroundColor;
-                target.style.backgroundColor = 'red';
 
-                // const tooltipElement = document.createElement('div');
-                // document.body.appendChild(tooltipElement);
-                //
-                // const root = ReactDOM.createRoot(tooltipElement);
-                // root.render(
-                //     <NoteTooltip noteId={noteId}>
-                //       {target.cloneNode(true)}
-                //     </NoteTooltip>
-                // );
+                // Initialize Tippy.js on the target element
+                tippy(target, {
+                  content: `Note ID: ${noteId}`,
+                  appendTo: () => document.body,
+                  delay: [0, 500],
+                  onShow(instance) {
+                    // Remove any existing tippy instance to avoid duplicates
+                    const existingTippy = (target as any)._tippy;
+                    if (existingTippy && existingTippy !== instance) {
+                      existingTippy.destroy();
+                    }
+                  },
+                });
 
-                //target.popover= "true";
-                target.style.position = 'relative';
-                target.style.cursor = 'pointer';
-                //target.setAttribute('class', 'tooltip');
-                // Show tooltip
-                target.setAttribute('data-tooltip', `Note ID: ${noteId}`);
+
+                if ((target as any)._tippy) {
+                  (target as any)._tippy.show();
+                }
+
                 return true;
               }
               return false;
             },
             mouseout(view, event) {
               const target = event.target as HTMLElement;
-              if (target.tagName === 'MARK' && target.hasAttribute('note_id')
-                  && target.getAttribute('note_id') != '0') {
-                target.style.backgroundColor = previousColor;
+              if (target.tagName === 'MARK' && target.hasAttribute('note_id') && target.getAttribute('note_id') !== '0') {
 
-                // Remove className attribute from mark element
-                //target.removeAttribute('class');
+                if ((target as any)._tippy) {
+                  (target as any)._tippy.hide();
+                }
 
-                // Remove tooltip content from data attribute
-                target.removeAttribute('data-tooltip');
-
-                // const tooltipElement = document.querySelector(`[data-note-id="${target.getAttribute('note_id')}"]`);
-                // if (tooltipElement) {
-                //   const root = ReactDOM.createRoot(tooltipElement);
-                //   root.unmount();
-                //   tooltipElement.remove();
-                // }
                 return true;
               }
               return false;
@@ -72,7 +56,8 @@ export const HoverExtension = Extension.create({
           },
         },
       }),
-    ]
+    ];
   },
 });
+
 export default HoverExtension;
