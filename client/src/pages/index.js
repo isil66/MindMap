@@ -62,7 +62,7 @@ export default function Home() {
             <div className={styles.buttonContainer}>
                 <AwesomeButton
                     onPress={handleLogin}//kısa fonksiyonları buraya yazabilirsin
-                    type="primary"
+                    type="secondary"
                     style={{
                         buttonPrimaryColor: "#230a10",
                         height: "53px",

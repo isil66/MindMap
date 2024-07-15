@@ -18,7 +18,8 @@ import {Button, CircularProgress, IconButton, Typography} from "@mui/material";
 import {useDebounce} from "@uidotdev/usehooks";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import useHoverOnMarks from './HoverOnMarks'
-import {HoverExtension} from './HoverExtention'
+import HoverExtension from './HoverExtention'
+import HoverExtensionWithNodeView from './HoverExtentionWithNodeView.jsx'
 
 //No, you should be able to listen to mouseover and mouseout DOM events (via the handleDOMEvents prop
 
@@ -208,9 +209,9 @@ const Tiptap = ({
 		  <IconButton
 			onClick={onAddButtonClick}
 			sx={{
-			  backgroundColor: '#621d9a',
+			  backgroundColor: '#8d65ab',
 			  '&:hover': {
-				backgroundColor: '#4B0082',
+				backgroundColor: '#592083',
 			  },
 			  marginLeft: '600px',
 			  marginTop: '-40px',
@@ -221,9 +222,9 @@ const Tiptap = ({
 		) : (<IconButton
 		  onClick={onNextButtonClick}
 		  sx={{
-			backgroundColor: '#621d9a',
+			backgroundColor: '#8d65ab',
 			'&:hover': {
-			  backgroundColor: '#4B0082',
+			  backgroundColor: '#592083',
 			},
 			marginLeft: '600px',
 			marginTop: '-40px',

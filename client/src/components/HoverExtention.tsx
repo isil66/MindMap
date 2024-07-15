@@ -38,6 +38,11 @@ export const HoverExtension = Extension.create({
                 // );
 
                 //target.popover= "true";
+                target.style.position = 'relative';
+                target.style.cursor = 'pointer';
+                //target.setAttribute('class', 'tooltip');
+                // Show tooltip
+                target.setAttribute('data-tooltip', `Note ID: ${noteId}`);
                 return true;
               }
               return false;
@@ -47,6 +52,12 @@ export const HoverExtension = Extension.create({
               if (target.tagName === 'MARK' && target.hasAttribute('note_id')
                   && target.getAttribute('note_id') != '0') {
                 target.style.backgroundColor = previousColor;
+
+                // Remove className attribute from mark element
+                //target.removeAttribute('class');
+
+                // Remove tooltip content from data attribute
+                target.removeAttribute('data-tooltip');
 
                 // const tooltipElement = document.querySelector(`[data-note-id="${target.getAttribute('note_id')}"]`);
                 // if (tooltipElement) {

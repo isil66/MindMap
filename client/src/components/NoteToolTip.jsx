@@ -1,16 +1,9 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 
-const NoteTooltip = ({children, noteId}) => {
-  const [open, setOpen] = useState(false);
-
+const NoteTooltip = ({ children, noteId, open }) => {
   return (
-	<Tooltip
-	  title={`Note ID: ${noteId}`}
-	  open={open}
-	  onOpen={() => setOpen(true)}
-	  onClose={() => setOpen(false)}
-	>
+	<Tooltip title={`Note ID: ${noteId}`} open={open}>
 	  <span>{children}</span>
 	</Tooltip>
   );

@@ -75,3 +75,50 @@
     max-height: calc(100vh - 150px);
 }
 
+/* Pure CSS selector with a class */
+.markWithNoteId {
+    position: relative;
+    cursor: pointer;
+}
+
+.markWithNoteId::after {
+    content: attr(note_id);
+    visibility: hidden;
+    opacity: 0;
+    width: max-content;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.3s;
+}
+
+.markWithNoteId::before {
+    content: '';
+    visibility: hidden;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid black;
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.3s;
+}
+
+.markWithNoteId:hover::after,
+.markWithNoteId:hover::before {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Base tooltip styles */
