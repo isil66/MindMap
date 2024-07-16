@@ -1,5 +1,6 @@
 "use client";
 import Head from "next/head";
+
 import {useEditor, EditorContent, FloatingMenu} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "./Toolbar";
@@ -13,13 +14,14 @@ import NavigateNextOutlinedIcon from '@mui/icons-material/NavigateNextOutlined';
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import NavigateBeforeOutlinedIcon from '@mui/icons-material/NavigateBeforeOutlined';
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Button, CircularProgress, IconButton, Typography} from "@mui/material";
 import {useDebounce} from "@uidotdev/usehooks";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import useHoverOnMarks from './HoverOnMarks'
 import HoverExtension from './HoverExtention'
 import HoverExtensionWithNodeView from './HoverExtentionWithNodeView.jsx'
+import {NotesContext} from "@/components/MyContext";
 
 //No, you should be able to listen to mouseover and mouseout DOM events (via the handleDOMEvents prop
 
@@ -36,6 +38,7 @@ const Tiptap = ({
 				  onNextButtonClick,
 				  onPreviousButton,
 				}) => {
+  const {notes, setNotes} = useContext(NotesContext);
   const [editable, setEditable] = useState(true);//set editability for upcoming stuff
   const debounceContent = useDebounce(content, 5000);
   const [autosaveInProgress, setAutosaveInProgress] = useState(false);
@@ -116,7 +119,7 @@ const Tiptap = ({
 
   const editor = useEditor({
 	editable,
-	extensions: [StarterKit, HoverExtension, Underline, CustomHighlight, Highlight, HorizontalRule, CharacterCount.configure({limit})],
+	extensions: [StarterKit, HoverExtension({notes, setNotes}), Underline, CustomHighlight, Highlight, HorizontalRule, CharacterCount.configure({limit})],
 	content: {content},
 	onCreate({editor}) {
 
@@ -193,7 +196,7 @@ const Tiptap = ({
 		{showPreviousButton ? (<IconButton
 		  onClick={onPreviousButton}
 		  sx={{
-			backgroundColor: '#621d9a',
+			backgroundColor: '#8d65ab',
 			'&:hover': {
 			  backgroundColor: '#4B0082',
 			},
