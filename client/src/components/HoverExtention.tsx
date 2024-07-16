@@ -7,6 +7,7 @@ export const HoverExtension = Extension.create({
   name: 'hover',
 
   addProseMirrorPlugins() {
+    let previousColor: string = '';
     return [
       new Plugin({
         key: new PluginKey('hover'),
@@ -17,14 +18,15 @@ export const HoverExtension = Extension.create({
               if (target.tagName === 'MARK' && target.hasAttribute('note_id') && target.getAttribute('note_id') !== '0') {
                 const noteId = target.getAttribute('note_id');
                 console.log('Hovered: ', noteId);
+                previousColor = target.style.backgroundColor;
+                target.style.backgroundColor = 'plum';
 
-                // Initialize Tippy.js on the target element
                 tippy(target, {
                   content: `Note ID: ${noteId}`,
                   appendTo: () => document.body,
                   delay: [0, 500],
+                  arrow: true,
                   onShow(instance) {
-                    // Remove any existing tippy instance to avoid duplicates
                     const existingTippy = (target as any)._tippy;
                     if (existingTippy && existingTippy !== instance) {
                       existingTippy.destroy();
@@ -34,7 +36,7 @@ export const HoverExtension = Extension.create({
 
 
                 if ((target as any)._tippy) {
-                  (target as any)._tippy.show();
+                  (target as any)._tippy.show(1);
                 }
 
                 return true;
@@ -45,8 +47,10 @@ export const HoverExtension = Extension.create({
               const target = event.target as HTMLElement;
               if (target.tagName === 'MARK' && target.hasAttribute('note_id') && target.getAttribute('note_id') !== '0') {
 
+                target.style.backgroundColor = previousColor;
+
                 if ((target as any)._tippy) {
-                  (target as any)._tippy.hide();
+                  (target as any)._tippy.destroy();
                 }
 
                 return true;

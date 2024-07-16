@@ -155,17 +155,6 @@ const Tiptap = ({
 		  </Head>
 		  <Toolbar editor={editor} content={content}/>
 		  <Paper>
-			{editor && <FloatingMenu editor={editor} tippyOptions={{duration: [0, 500], }}>
-			  <div className={styles.floatingMenu}>
-				<button
-				  onClick={() => editor.chain().focus().toggleHeading({level: 1}).run()}
-				  className={`${styles.floatingMenu} ${editor.isActive('heading', {level: 1}) ? styles.isActive : ''}`}
-				>
-				  H1
-				</button>
-
-			  </div>
-			</FloatingMenu>}
 			<div className={styles.editorContentWrapper}>
 			  <EditorContent editor={editor}/>
 			</div>
