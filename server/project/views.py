@@ -4,8 +4,9 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status, viewsets
-from .serializers import ProjectSerializer, ProjectCreateSerializer, PageSerializer, PageCreateSerializer
-from .models import DocumentProject, Page
+from .serializers import ProjectSerializer, ProjectCreateSerializer, PageSerializer, PageCreateSerializer, \
+    NoteSerializer
+from .models import DocumentProject, Page, Note
 from django.utils import timezone
 from .permissions import IsOwner
 
@@ -111,3 +112,23 @@ class PageView(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    # GET dashboard/page/{id}
+    def retrieve(self, request, *args, **kwargs):
+        page_instance = self.get_object()  # get the page instance with given id
+        notes = Note.objects.filter(page=page_instance).order_by('id')
+
+        print("notes:", notes)
+        if notes.exists():
+            serializer = NoteSerializer(notes, many=True)
+            if serializer.is_valid():
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class NoteView(viewsets.ModelViewSet):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
