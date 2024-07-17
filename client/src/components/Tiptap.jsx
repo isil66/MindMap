@@ -60,7 +60,6 @@ const Tiptap = ({
   }, [pageIndex]);
 
   useEffect(() => {
-	console.log("autosave");
 	onSave();
 	handleAutosave();
   }, [debounceContent]);
@@ -119,7 +118,10 @@ const Tiptap = ({
 
   const editor = useEditor({
 	editable,
-	extensions: [StarterKit, HoverExtension({notes, setNotes}), Underline, CustomHighlight, Highlight, HorizontalRule, CharacterCount.configure({limit})],
+	extensions: [StarterKit, HoverExtension({
+	  notes,
+	  setNotes
+	}), Underline, CustomHighlight, Highlight, HorizontalRule, CharacterCount.configure({limit})],
 	content: {content},
 	onCreate({editor}) {
 
@@ -186,26 +188,32 @@ const Tiptap = ({
 			Page {pageIndex + 1}/{totalPageCount}
 		  </div>
 		</div>
-		<Typography variant="body2" display="inline"
-					style={{fontFamily: 'Playfair Display, serif', color: '#999999'}}
-					sx={{marginLeft: '10px', marginTop: '-50px',}}>
-		  {autosaveInProgress ? 'Saving...' : 'Saved'} {autosaveInProgress ? <CircularProgress size={12}/> :
-		  <CheckCircleOutlineIcon fontSize={'1.5rem'} sx={{marginTop: '-3px',}}/>}
+		<Typography
+		  variant="body2"
+		  display="inline"
+		  style={{fontFamily: 'Playfair Display, serif', color: '#999999'}}
+		  sx={{marginLeft: '10px', marginTop: '-50px',}}
+		>
+		  {autosaveInProgress ? 'Saving...' : 'Saved'}
+		  {autosaveInProgress ? <CircularProgress size={12}/> :
+			<CheckCircleOutlineIcon fontSize={'1.5rem'} sx={{marginTop: '-3px',}}/>}
 		</Typography>
 
-		{showPreviousButton ? (<IconButton
-		  onClick={onPreviousButton}
-		  sx={{
-			backgroundColor: '#8d65ab',
-			'&:hover': {
-			  backgroundColor: '#4B0082',
-			},
-			marginLeft: '500px',
-			marginTop: '-40px',
-		  }}
-		>
-		  <NavigateBeforeOutlinedIcon></NavigateBeforeOutlinedIcon>
-		</IconButton>) : null}
+		{showPreviousButton ?
+		  (
+			<IconButton
+			  onClick={onPreviousButton}
+			  sx={{
+				backgroundColor: '#8d65ab',
+				'&:hover': {
+				  backgroundColor: '#4B0082',
+				},
+				marginLeft: '500px',
+				marginTop: '-40px',
+			  }}
+			>
+			  <NavigateBeforeOutlinedIcon/>
+			</IconButton>) : null}
 
 
 		{showAddButton ? (

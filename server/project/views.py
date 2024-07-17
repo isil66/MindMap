@@ -132,3 +132,18 @@ class NoteView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
+
+    def list(self, request, *args, **kwargs):
+        last_note_object =Note.objects.last()
+
+
+        if last_note_object:
+            response = {
+                'largest_current_note_id': last_note_object.id,
+            }
+            return Response(response, status=status.HTTP_200_OK)
+
+        response = {
+            'largest_current_note_id': 0,
+        }
+        return Response(response, status=status.HTTP_200_OK)

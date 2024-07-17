@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useRef} from "react";
+import React, {useEffect, useRef} from "react";
 import {Editor} from "@tiptap/react";
 import styles from "../styles/Tiptap.module.css";
 import {
@@ -22,9 +22,40 @@ import {
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 
+const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
+
 const Toolbar = ({editor, content}) => {
   const noteIdRef = useRef(0);// todo DB'den çek
   const takeNoteRef = useRef(true);
+
+
+  const getNoteIdStartingPoint = async () => {
+	try {
+	  const storedToken = localStorage.getItem('authToken');
+
+	  const response = await fetch(`${BASE_URL}/dashboard/page/notes/`, {
+		method: 'GET',
+		headers: {
+		  Authorization: `Token ${storedToken}`,
+		},
+	  });
+
+
+	  if (response.ok)  {
+		const responseJson = await response.json();
+		console.log(responseJson);
+		console.log(responseJson.largest_current_note_id);
+		noteIdRef.current = responseJson.largest_current_note_id;
+
+	  }
+	} catch (error) {
+	  console.error('Error fetching dashboard data:', error.message);
+	}
+  };
+
+  useEffect(() => {
+	getNoteIdStartingPoint()
+  }, []);
 
   if (!editor) {
 	return null;
@@ -55,8 +86,9 @@ const Toolbar = ({editor, content}) => {
 	editor.chain().focus().toggleHighlight({color: "#500bb6", note_id: newNoteId}).run();
   };
 
-  const handleClick = (e) => {
 
+
+  const handleNoteToggles = (e) => {
 	if (editor.state.selection['ranges'][0]['$to']['pos']
 	  !== editor.state.selection['ranges'][0]['$from']['pos']) {
 	  selectToTakeNote(e);
@@ -127,7 +159,7 @@ const Toolbar = ({editor, content}) => {
 	  <Tooltip title="Take Note" placement="top">
 		<IconButton
 		  style={buttonStyle}
-		  onClick={handleClick}>
+		  onClick={handleNoteToggles}>
 		  <StickyNote/>
 		</IconButton>
 	  </Tooltip>
