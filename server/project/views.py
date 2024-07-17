@@ -153,7 +153,7 @@ class NoteView(viewsets.ModelViewSet):
         data = request.data.copy()  # to not modify original data
         print(data)
 
-        serializer = self.get_serializer()
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)

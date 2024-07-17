@@ -44,14 +44,14 @@ const Toolbar = ({editor, content, pageId}) => {
 		headers: {
 		  'Content-Type': 'application/json',
 		  Authorization: `Token ${storedToken}`,
-		  body: JSON.stringify({page: pageId, content: noteContent}),
 		},
+		body: JSON.stringify({page: pageId, content: noteContent}),
 	  });
 	  if (response.ok) {
 		const responseJson = await response.json();
-		console.log("sucess of post", responseJson);
+		console.log("success of post", responseJson);
 	  } else {
-		console.log("wtf");
+		console.log("HTTP error", response.status, response.statusText);
 	  }
 	} catch (error) {
 	  console.error('Error fetching dashboard data:', error.message);
