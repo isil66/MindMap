@@ -32,6 +32,8 @@ const Toolbar = ({editor, content}) => {
   const [showTextField, setShowTextField] = useState(false);
   const [noteContent, setNoteContent] = useState('');
   const [textFieldPosition, setTextFieldPosition] = useState({top: 0, left: 0});
+  const fromRef = useRef(0);
+  const toRef = useRef(0);
 
   const getNoteIdStartingPoint = async () => {
 	try {
@@ -60,6 +62,7 @@ const Toolbar = ({editor, content}) => {
   }
 
   const handleClickTakeNoteStart = (e) => {
+	fromRef.current = editor.state.selection['ranges'][0]['$from']['pos']
 	e.preventDefault();
 	takeNoteRef.current = false;
 	const newNoteId = noteIdRef.current + 1;
@@ -68,6 +71,7 @@ const Toolbar = ({editor, content}) => {
   };
 
   const handleClickTakeNoteEnd = (e) => {
+	toRef.current = editor.state.selection['ranges'][0]['$to']['pos']
 	e.preventDefault();
 	takeNoteRef.current = true;
 	editor.chain().focus().toggleHighlight({color: "#500bb6", note_id: noteIdRef.current}).run();
@@ -82,6 +86,7 @@ const Toolbar = ({editor, content}) => {
   };
 
   const handleNoteToggles = (e) => {
+
 	if (editor.state.selection['ranges'][0]['$to']['pos']
 	  !== editor.state.selection['ranges'][0]['$from']['pos']) {
 	  selectToTakeNote(e);
@@ -106,6 +111,10 @@ const Toolbar = ({editor, content}) => {
   const handleCancel = () => {
 	setShowTextField(false);
 	setNoteContent('');
+
+	editor.commands.setTextSelection({from: fromRef.current, to: toRef.current});
+
+	editor.chain().focus().unsetHighlight().run();
   };
 
   const handleSave = () => {
