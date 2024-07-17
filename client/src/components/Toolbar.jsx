@@ -26,7 +26,7 @@ import {
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
-const Toolbar = ({editor, content}) => {
+const Toolbar = ({editor, content, pageId}) => {
   const noteIdRef = useRef(0);// todo DB'den çek
   const takeNoteRef = useRef(true);
   const [showTextField, setShowTextField] = useState(false);
@@ -34,6 +34,29 @@ const Toolbar = ({editor, content}) => {
   const [textFieldPosition, setTextFieldPosition] = useState({top: 0, left: 0});
   const fromRef = useRef(0);
   const toRef = useRef(0);
+
+  const saveNote = async () => {
+	console.log("post calling", pageId);
+	try {
+	  const storedToken = localStorage.getItem('authToken');
+	  const response = await fetch(`${BASE_URL}/dashboard/page/notes/`, {
+		method: 'POST',
+		headers: {
+		  'Content-Type': 'application/json',
+		  Authorization: `Token ${storedToken}`,
+		  body: JSON.stringify({page: pageId, content: noteContent}),
+		},
+	  });
+	  if (response.ok) {
+		const responseJson = await response.json();
+		console.log("sucess of post", responseJson);
+	  } else {
+		console.log("wtf");
+	  }
+	} catch (error) {
+	  console.error('Error fetching dashboard data:', error.message);
+	}
+  };
 
   const getNoteIdStartingPoint = async () => {
 	try {
@@ -81,6 +104,8 @@ const Toolbar = ({editor, content}) => {
   const selectToTakeNote = (e) => {
 	const newNoteId = noteIdRef.current + 1;
 	noteIdRef.current = newNoteId;
+	toRef.current = editor.state.selection['ranges'][0]['$to']['pos']
+	fromRef.current = editor.state.selection['ranges'][0]['$from']['pos']
 	editor.chain().focus().toggleHighlight({color: "#500bb6", note_id: newNoteId}).run();
 	showTextFieldAtCursor();
   };
@@ -118,7 +143,8 @@ const Toolbar = ({editor, content}) => {
   };
 
   const handleSave = () => {
-	// todo: post requesti at
+	saveNote();
+	console.log("PAGEID", pageId);
 	console.log('Saved note content:', noteContent);
 	setShowTextField(false);
 	setNoteContent('');
@@ -280,8 +306,10 @@ const Toolbar = ({editor, content}) => {
 		  padding: '10px',
 		  borderRadius: '5px',
 		  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
-		}}>
+		}}
+		>
 		  <TextField
+			label="Take a note..."
 			multiline
 			rows={4}
 			variant="outlined"

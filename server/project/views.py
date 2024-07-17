@@ -134,8 +134,7 @@ class NoteView(viewsets.ModelViewSet):
     serializer_class = NoteSerializer
 
     def list(self, request, *args, **kwargs):
-        last_note_object =Note.objects.last()
-
+        last_note_object = Note.objects.last()
 
         if last_note_object:
             response = {
@@ -147,3 +146,16 @@ class NoteView(viewsets.ModelViewSet):
             'largest_current_note_id': 0,
         }
         return Response(response, status=status.HTTP_200_OK)
+
+    #  POST dashboard/page/
+    def create(self, request, *args, **kwargs):
+        print("backened post")
+        data = request.data.copy()  # to not modify original data
+        print(data)
+
+        serializer = self.get_serializer()
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

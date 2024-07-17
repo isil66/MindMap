@@ -30,6 +30,7 @@ const Tiptap = ({
 				  onChange,
 				  content,
 				  pageIndex,
+  				  pageId,
 				  totalPageCount,
 				  onSave,
 				  showPreviousButton,
@@ -158,7 +159,7 @@ const Tiptap = ({
 			<link
 			  href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"/>
 		  </Head>
-		  <Toolbar editor={editor} content={content}/>
+		  <Toolbar editor={editor} content={content} pageId={pageId}/>
 		  <Paper>
 			<div className={styles.editorContentWrapper}>
 			  <EditorContent editor={editor}/>

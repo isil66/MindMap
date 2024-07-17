@@ -7,7 +7,6 @@ import {NotesContext} from '@/components/MyContext';
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
 
-
 const ProjectPage = () => {
   const notesFromContext = useContext(NotesContext);
   const [notes, setNotes] = useState(notesFromContext);
@@ -18,6 +17,7 @@ const ProjectPage = () => {
 	{id: 3, content: 'Page 3 content'}
   ]);
   const [pageIndex, setPageIndex] = useState(0);
+  const [pageId, setPageId] = useState(0);
   const [totalPageCount, setTotalPageCount] = useState(0);
   const [pages, setPages] = useState(null);
   const [content, setContent] = useState('');
@@ -39,7 +39,6 @@ const ProjectPage = () => {
 
   const updatePageContent = (index, newContent) => {
 	const currentPages = pagesRef.current;
-	console.log("Array.isArray(currentPages)", Array.isArray(currentPages));
 	if (Array.isArray(currentPages) && index >= 0 && index < currentPages.length) {
 	  const newPages = [...currentPages];
 	  newPages[index] = {...newPages[index], content: newContent};
@@ -51,7 +50,9 @@ const ProjectPage = () => {
 
   const handlePrevious = () => {
 	handleSave();
+	console.log("pagesREEEFF", pagesRef.current[pageIndex].id);
 	contentRef.current = pagesRef.current[pageIndex - 1].content;
+	setPageId(pagesRef.current[pageIndex - 1].id);
 	setContent(contentRef.current);
 	console.log("handle prev called", contentRef.current, content);
 	setPageIndex((prev) => prev - 1);
@@ -60,9 +61,11 @@ const ProjectPage = () => {
   const handleNext = () => {
 	handleSave();
 	contentRef.current = pagesRef.current[pageIndex + 1].content;
+	setPageId(pagesRef.current[pageIndex + 1].id);
 	setContent(contentRef.current);
 	console.log("handle next called", contentRef.current, content);
 	setPageIndex((prev) => prev + 1);
+
   };
   const handlePageCreation = async () => {
 	try {
@@ -88,6 +91,7 @@ const ProjectPage = () => {
 		setTotalPageCount((prev) => prev + 1);
 		setPageIndex((prev) => prev + 1);
 		contentRef.current = responseJson.content;
+		setPageId(pagesRef.current[pagesRef.current.length - 1].id);
 		setContent(responseJson.content);
 	  }
 	} catch (error) {
@@ -172,6 +176,7 @@ const ProjectPage = () => {
 		  setContent(responseJson.pages[pageIndex].content);
 		  setPages(responseJson.pages);
 		  pagesRef.current = responseJson.pages;
+		  setPageId(pagesRef.current[pageIndex].id);
 		  setTotalPageCount(responseJson.total_page_count);
 		}
 	  } catch (error) {
@@ -189,9 +194,14 @@ const ProjectPage = () => {
 	  <NotesContext.Provider value={{notes, setNotes}}>
 		<Tiptap content={content}
 				onChange={(newContent) => handleContentChange(newContent)}
-				pageIndex={pageIndex} totalPageCount={totalPageCount} onSave={handleSave}
-				showAddButton={pageIndex + 1 === totalPageCount} showPreviousButton={pageIndex !== 0}
-				onAddButtonClick={handlePageCreation} onNextButtonClick={handleNext}
+				pageIndex={pageIndex}
+				pageId={pageId}
+				totalPageCount={totalPageCount}
+				onSave={handleSave}
+				showAddButton={pageIndex + 1 === totalPageCount}
+				showPreviousButton={pageIndex !== 0}
+				onAddButtonClick={handlePageCreation}
+				onNextButtonClick={handleNext}
 				onPreviousButton={handlePrevious}/>
 	  </NotesContext.Provider>
 
