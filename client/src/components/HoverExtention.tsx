@@ -129,16 +129,16 @@ const HoverExtension = ({notes, setNotes}) => {
               mouseover(view, event) {
                 const target = event.target as HTMLElement;
 
-
                 if (target.tagName === 'MARK' && target.hasAttribute('note_id') && target.getAttribute('note_id') !== '0') {
                   const noteId = target.getAttribute('note_id');
-
-                  console.log("hh", notes['1'].find((note: { id: number; }) => note.id === 2).content);
+                  console.log("notes all:", notes);
+                  console.log("noteId: ",noteId);
+                  console.log("hh", notes.find((item: { id: number; }) => item.id ===  parseInt(noteId,10))?.content);
                   previousColor = target.style.backgroundColor;
                   target.style.backgroundColor = 'plum';
 
                   tippy(target, {
-                    content: `content: ${noteId}`,
+                    content: `content: ${notes.find((item: { id: number; }) => item.id === 2).content}`,
                     hideOnClick: false,
                     appendTo: () => document.body,
                     delay: [0, 500],

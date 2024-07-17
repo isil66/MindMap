@@ -26,7 +26,7 @@ import {
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
-const Toolbar = ({editor, content, pageId}) => {
+const Toolbar = ({editor, content, pageId, notes, setNotes}) => {
   const noteIdRef = useRef(0);// todo DB'den çek
   const takeNoteRef = useRef(true);
   const [showTextField, setShowTextField] = useState(false);
@@ -34,9 +34,10 @@ const Toolbar = ({editor, content, pageId}) => {
   const [textFieldPosition, setTextFieldPosition] = useState({top: 0, left: 0});
   const fromRef = useRef(0);
   const toRef = useRef(0);
+  const noteRef = useRef({page: -1, content: "test"})
 
   const saveNote = async () => {
-	console.log("post calling", pageId);
+
 	try {
 	  const storedToken = localStorage.getItem('authToken');
 	  const response = await fetch(`${BASE_URL}/dashboard/page/notes/`, {
@@ -49,7 +50,14 @@ const Toolbar = ({editor, content, pageId}) => {
 	  });
 	  if (response.ok) {
 		const responseJson = await response.json();
-		console.log("success of post", responseJson);
+		console.log("success of post note id:", responseJson.id);
+		noteRef.current ={
+		  id: responseJson.id,
+		  content: responseJson.content,
+		}
+
+		console.log("all notes toolbar:", notes, "bruh noteref", noteRef.current);
+
 	  } else {
 		console.log("HTTP error", response.status, response.statusText);
 	  }
@@ -57,6 +65,11 @@ const Toolbar = ({editor, content, pageId}) => {
 	  console.error('Error fetching dashboard data:', error.message);
 	}
   };
+
+  useEffect(() => {
+	console.log("noteref changed:" , noteRef.current);
+	setNotes((prevNotes) => [...prevNotes, noteRef.current]);
+  }, [noteRef.current]);
 
   const getNoteIdStartingPoint = async () => {
 	try {
@@ -136,9 +149,7 @@ const Toolbar = ({editor, content, pageId}) => {
   const handleCancel = () => {
 	setShowTextField(false);
 	setNoteContent('');
-
 	editor.commands.setTextSelection({from: fromRef.current, to: toRef.current});
-
 	editor.chain().focus().unsetHighlight().run();
   };
 
