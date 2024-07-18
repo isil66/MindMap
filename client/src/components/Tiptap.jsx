@@ -60,11 +60,6 @@ const Tiptap = ({
 	if (editor) {
 	  editor.commands.setContent(content);
 	}
-	console.log("useeffect içi", notes, "----------\n", setNotes);
-	setNotes(
-	  [{id: 1, content: "test 1"}]
-	);
-	console.log("setContext yapılıy");
   }, [pageIndex]);
 
   useEffect(() => {

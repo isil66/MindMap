@@ -14,7 +14,7 @@ const HoverExtension = ({ setNotes, getLatestNotes }) => {
     name: 'hover',
 
     addProseMirrorPlugins() {
-      let notes = getLatestNotes();
+
       let previousColor: string = '';
       let contextMenu: HTMLElement | null = null;
       let popperInstance: Instance | null = null;
@@ -106,16 +106,18 @@ const HoverExtension = ({ setNotes, getLatestNotes }) => {
 
                 if (target.tagName === 'MARK' && target.hasAttribute('note_id') && target.getAttribute('note_id') !== '0') {
                   const noteId = target.getAttribute('note_id');
+                  let notes = getLatestNotes();
                   console.log("notes all:", notes);
                   console.log("noteId: ",noteId);
-                  console.log("hh", notes.find((item: { id: number; }) => item.id ===  parseInt(noteId,10))?.content);
+                  let currentNote =notes.find((item: { id: number; }) => item.id ===  parseInt(noteId,10));
+                  console.log("hh", currentNote.content);
                   previousColor = target.style.backgroundColor;
                   target.style.backgroundColor = 'plum';
 
                   console.log(getLatestNotes());
 
                   tippy(target, {
-                    content: `content: ${notes.find((item: { id: number; }) => item.id === 15).content}`,
+                    content: `${currentNote.content}`,
                     hideOnClick: false,
                     appendTo: () => document.body,
                     delay: [0, 500],

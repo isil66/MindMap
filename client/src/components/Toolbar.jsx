@@ -39,6 +39,7 @@ const Toolbar = ({editor, content, pageId}) => {
   const [note, setNote] = useState({page: -1, content: "test"});
   const {notes, setNotes, getLatestNotes} = useContext(NotesContext);//doğru
   console.log("hepsi:",notes);
+  console.log("noteidref", noteIdRef.current);
   const saveNote = async () => {
 
 	try {
@@ -125,8 +126,9 @@ const Toolbar = ({editor, content, pageId}) => {
   const selectToTakeNote = (e) => {
 	const newNoteId = noteIdRef.current + 1;
 	noteIdRef.current = newNoteId;
-	toRef.current = editor.state.selection['ranges'][0]['$to']['pos']
-	fromRef.current = editor.state.selection['ranges'][0]['$from']['pos']
+	toRef.current = editor.state.selection['ranges'][0]['$to']['pos'];
+	fromRef.current = editor.state.selection['ranges'][0]['$from']['pos'];
+	console.log("selection note id to be", newNoteId);
 	editor.chain().focus().toggleHighlight({color: "#500bb6", note_id: newNoteId}).run();
 	showTextFieldAtCursor();
   };
