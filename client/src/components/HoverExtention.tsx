@@ -21,7 +21,7 @@ const HoverExtension = ({ notes, setNotes }) => {
       const deleteNote = async (noteID: string) => {
         try {
           const storedToken = localStorage.getItem('authToken');
-          const response = await fetch(`${BASE_URL}/dashboard/page/notes/${noteID}`, {
+          const response = await fetch(`${BASE_URL}/dashboard/page/notes/${noteID}/`, {
             method: 'DELETE',
             headers: {
               Authorization: `Token ${storedToken}`,
