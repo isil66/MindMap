@@ -27,7 +27,7 @@ import {
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
 const Toolbar = ({editor, content, pageId, notes, setNotes}) => {
-  const noteIdRef = useRef(0);// todo DB'den çek
+  const noteIdRef = useRef(0);
   const takeNoteRef = useRef(true);
   const [showTextField, setShowTextField] = useState(false);
   const [noteContent, setNoteContent] = useState('');
@@ -35,6 +35,7 @@ const Toolbar = ({editor, content, pageId, notes, setNotes}) => {
   const fromRef = useRef(0);
   const toRef = useRef(0);
   const noteRef = useRef({page: -1, content: "test"})
+  const [note, setNote] = useState({page: -1, content: "test"});
 
   const saveNote = async () => {
 
@@ -51,12 +52,12 @@ const Toolbar = ({editor, content, pageId, notes, setNotes}) => {
 	  if (response.ok) {
 		const responseJson = await response.json();
 		console.log("success of post note id:", responseJson.id);
-		noteRef.current ={
+		noteRef.current = {
 		  id: responseJson.id,
 		  content: responseJson.content,
 		}
-
-		console.log("all notes toolbar:", notes, "bruh noteref", noteRef.current);
+		setNote(noteRef.current);
+		console.log("all notes toolbar:", notes, "bruh noteref", noteRef.current, "note:", note);
 
 	  } else {
 		console.log("HTTP error", response.status, response.statusText);
@@ -67,9 +68,11 @@ const Toolbar = ({editor, content, pageId, notes, setNotes}) => {
   };
 
   useEffect(() => {
-	console.log("noteref changed:" , noteRef.current);
-	setNotes((prevNotes) => [...prevNotes, noteRef.current]);
-  }, [noteRef.current]);
+	if (noteRef.current.id>0) {
+	  console.log("noteref changed:", noteRef.current);
+	  setNotes((prevNotes) => [...prevNotes, noteRef.current]);
+	}
+  }, [note]);
 
   const getNoteIdStartingPoint = async () => {
 	try {
