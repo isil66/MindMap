@@ -182,13 +182,13 @@ const ProjectPage = () => {
 			left: "3%",
 			buttonPrimaryColor: "#230a10",
 			height: "40px",
-			width: "80px",
+			width: "100px",
 			fontSize: "16px",
 			borderRadius: "10px",
 			primaryColor: "#00000"
 		  }}
 		>
-		  Projects
+		  ⬅Projects
 		</AwesomeButton>
 		<Tiptap content={content}
 				onChange={(newContent) => handleContentChange(newContent)}

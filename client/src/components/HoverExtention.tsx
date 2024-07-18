@@ -6,6 +6,9 @@ import { createPopper, Instance } from '@popperjs/core';//positioning yapıyor s
 import { NotesContext } from './MyContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
+const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
+
 const HoverExtension = ({ notes, setNotes }) => {
   return Extension.create({
     name: 'hover',
@@ -14,6 +17,30 @@ const HoverExtension = ({ notes, setNotes }) => {
       let previousColor: string = '';
       let contextMenu: HTMLElement | null = null;
       let popperInstance: Instance | null = null;
+
+      const deleteNote = async (noteID: string) => {
+        try {
+          const storedToken = localStorage.getItem('authToken');
+          const response = await fetch(`${BASE_URL}/dashboard/page/notes/${noteID}`, {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Token ${storedToken}`,
+            },
+          });
+
+          if (!response.ok) {
+            const responseJson = await response.json();
+            const errorMessage = responseJson.error;
+            console.log("error", errorMessage);
+
+          } else {
+            console.log('success in deleting note');
+            //todo update the GLOBAL notes
+          }
+        } catch (error) {
+
+        }
+      };
 
       function createContextMenu(target: HTMLElement) {
         if (contextMenu) {
@@ -40,6 +67,8 @@ const HoverExtension = ({ notes, setNotes }) => {
           contextMenu?.remove();
           popperInstance?.destroy();
           contextMenu = null;
+          console.log(target.getAttribute('note_id'));
+          deleteNote(target.getAttribute('note_id'));
         });
 
         const editButton = document.createElement('button');
