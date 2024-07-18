@@ -3,9 +3,10 @@ import {useContext, useEffect, useRef, useState} from "react";
 import Tiptap from '../../../components/Tiptap'
 import {Box, Button} from '@mui/material';
 import {NotesContext} from '@/components/MyContext';
+import {AwesomeButton} from "react-awesome-button";
+import 'react-awesome-button/dist/styles.css';
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
-
 
 const ProjectPage = () => {
   const notesFromContext = useContext(NotesContext);
@@ -24,6 +25,11 @@ const ProjectPage = () => {
   const contentRef = useRef('');
   const router = useRouter();
   const {prj_id} = router.query;//gets the url and finds the dynamic id//NEED CURLY BRACES TO DESTRUCT
+
+  const backToDashboard = () =>{
+	router.push('/dashboard/');
+  }
+
   const handleContentChange = (reason) => {
 	setContent(reason)
   }
@@ -65,8 +71,8 @@ const ProjectPage = () => {
 	setContent(contentRef.current);
 	console.log("handle next called", contentRef.current, content);
 	setPageIndex((prev) => prev + 1);
-
   };
+
   const handlePageCreation = async () => {
 	try {
 	  const storedToken = localStorage.getItem('authToken');
@@ -81,7 +87,6 @@ const ProjectPage = () => {
 	  if (!response.ok) {
 		//const responseJson = await response.json();
 		//const errorMessage = responseJson.error;
-
 	  } else {
 		console.log("created page");
 		const responseJson = await response.json();
@@ -99,16 +104,6 @@ const ProjectPage = () => {
 	}
   };
 
-  // const updatePageContent = (index, newContent) => {
-  //     const newPages = [...pages.current];
-  //     console.log("newpages1", newPages);
-  //     if (index >= 0 && index < newPages.length) {
-  //         newPages[index] = {...newPages[index], content: newContent};
-  //         pages.current = newPages;
-  //     }
-  //     console.log("newpages2", pages.current);
-  // };
-
   const handleSave = async () => {
 	updatePageContent(pageIndex, content);
 	try {
@@ -124,7 +119,6 @@ const ProjectPage = () => {
 	  if (!response.ok) {
 		//const responseJson = await response.json();
 		//const errorMessage = responseJson.error;
-
 	  } else {
 		console.log("succesfully updated content");
 		const responseJson = await response.json();
@@ -135,20 +129,10 @@ const ProjectPage = () => {
 	}
   };
 
-  //An async function is really just syntax sugar for promises,
-  // so when you call an async function, it's returning a promise.
-  //But in useEffect u need to give it a function in this form () => {function();};
-  //nstead, you can wrap your async function with an IIFE (Immediately-invoked Function Expression) like this,
-  // so nothing is returned to useEffect and used as a cleanup function:
-  //useEffect(() => {
-  //   (async () => getResponse())();
-  // });
   useEffect(() => {
-
 	setContent(contentRef.current);
 	console.log("pageIndex updated,", content);
   }, [pageIndex]);
-
 
   useEffect(() => {
 	(async () => {
@@ -164,7 +148,6 @@ const ProjectPage = () => {
 		if (!response.ok) {
 		  //const responseJson = await response.json();
 		  //const errorMessage = responseJson.error;
-
 		} else {
 		  console.log("succes");
 		  const responseJson = await response.json();
@@ -192,6 +175,22 @@ const ProjectPage = () => {
   return (
 	<div>
 	  <NotesContext.Provider value={{notes, setNotes}}>
+		<AwesomeButton
+		  onPress={backToDashboard}//kısa fonksiyonları buraya yazabilirsin
+		  type="secondary"
+		  style={{
+			position: "absolute",
+			top: "10px",
+			left: "10px",
+			buttonPrimaryColor: "#230a10",
+			height: "53px",
+			fontSize: "16px",
+			borderRadius: "10px",
+			primaryColor: "#00000"
+		  }}
+		>
+		  Dashboard
+		</AwesomeButton>
 		<Tiptap content={content}
 				onChange={(newContent) => handleContentChange(newContent)}
 				pageIndex={pageIndex}
@@ -204,7 +203,8 @@ const ProjectPage = () => {
 				onNextButtonClick={handleNext}
 				onPreviousButton={handlePrevious}/>
 	  </NotesContext.Provider>
-
-	</div>)
+	</div>
+  );
 };
+
 export default ProjectPage;
