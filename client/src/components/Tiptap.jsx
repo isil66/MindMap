@@ -39,7 +39,7 @@ const Tiptap = ({
 				  onNextButtonClick,
 				  onPreviousButton,
 				}) => {
-  const {notes, setNotes} = useContext(NotesContext);
+  const {notes, setNotes, getLatestNotes} = useContext(NotesContext);
   const [editable, setEditable] = useState(true);//set editability for upcoming stuff
   const debounceContent = useDebounce(content, 5000);
   const [autosaveInProgress, setAutosaveInProgress] = useState(false);
@@ -127,8 +127,8 @@ const Tiptap = ({
   const editor = useEditor({
 	editable,
 	extensions: [StarterKit, HoverExtension({
-	  notes,
-	  setNotes
+	  setNotes,
+	  getLatestNotes
 	}), Underline, CustomHighlight, Highlight, HorizontalRule, CharacterCount.configure({limit})],
 	content: {content},
 	onCreate({editor}) {
@@ -150,7 +150,7 @@ const Tiptap = ({
 
   const percentage = editor ? Math.round((100 / limit) * editor.storage.characterCount.characters()) : 0;
 
-  console.log("hepsi:",notes);
+  console.log("hepsi:", notes);
 
   // <div className={`character-count ${editor.storage.characterCount.characters() === limit ? 'character-count--warning' : ''}`}>
   // this doesnt work since we pass a literal string, but instead we need to pass the css object innerds

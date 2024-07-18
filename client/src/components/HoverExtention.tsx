@@ -9,11 +9,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
-const HoverExtension = ({ notes, setNotes }) => {
+const HoverExtension = ({ setNotes, getLatestNotes }) => {
   return Extension.create({
     name: 'hover',
 
     addProseMirrorPlugins() {
+      let notes = getLatestNotes();
       let previousColor: string = '';
       let contextMenu: HTMLElement | null = null;
       let popperInstance: Instance | null = null;
@@ -110,6 +111,8 @@ const HoverExtension = ({ notes, setNotes }) => {
                   console.log("hh", notes.find((item: { id: number; }) => item.id ===  parseInt(noteId,10))?.content);
                   previousColor = target.style.backgroundColor;
                   target.style.backgroundColor = 'plum';
+
+                  console.log(getLatestNotes());
 
                   tippy(target, {
                     content: `content: ${notes.find((item: { id: number; }) => item.id === 15).content}`,

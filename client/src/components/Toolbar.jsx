@@ -37,7 +37,7 @@ const Toolbar = ({editor, content, pageId}) => {
   const toRef = useRef(0);
   const noteRef = useRef({page: -1, content: "test"})
   const [note, setNote] = useState({page: -1, content: "test"});
-  const {notes, setNotes} = useContext(NotesContext);//doğru
+  const {notes, setNotes, getLatestNotes} = useContext(NotesContext);//doğru
   console.log("hepsi:",notes);
   const saveNote = async () => {
 
