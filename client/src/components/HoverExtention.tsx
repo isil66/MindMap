@@ -67,7 +67,6 @@ const HoverExtension = ({ notes, setNotes }) => {
           contextMenu?.remove();
           popperInstance?.destroy();
           contextMenu = null;
-          console.log(target.getAttribute('note_id'));
           deleteNote(target.getAttribute('note_id'));
         });
 
@@ -113,7 +112,7 @@ const HoverExtension = ({ notes, setNotes }) => {
                   target.style.backgroundColor = 'plum';
 
                   tippy(target, {
-                    content: `content: ${notes.find((item: { id: number; }) => item.id === 2).content}`,
+                    content: `content: ${notes.find((item: { id: number; }) => item.id === 15).content}`,
                     hideOnClick: false,
                     appendTo: () => document.body,
                     delay: [0, 500],

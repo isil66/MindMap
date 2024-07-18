@@ -2,7 +2,7 @@ import {useRouter} from 'next/router';
 import {useContext, useEffect, useRef, useState} from "react";
 import Tiptap from '../../../components/Tiptap'
 import {Box, Button} from '@mui/material';
-import {NotesContext} from '@/components/MyContext';
+import {NotesContext, NotesContextProvider} from '@/components/MyContext';
 import {AwesomeButton} from "react-awesome-button";
 import 'react-awesome-button/dist/styles.css';
 
@@ -129,7 +129,9 @@ const ProjectPage = () => {
 
   useEffect(() => {
 	setContent(contentRef.current);
+	setNotes([{id: 15, content: "son"}]);
 	console.log("pageIndex updated,", content);
+	console.log("allnotes prj",notes);
   }, [pageIndex]);
 
   useEffect(() => {
@@ -172,7 +174,7 @@ const ProjectPage = () => {
 
   return (
 	<div>
-	  <NotesContext.Provider value={{notes, setNotes}}>
+	  <NotesContextProvider value={{notes, setNotes}}>
 		<AwesomeButton
 		  onPress={()=>{router.push('/dashboard/');}} //maybe projelerin hepsinin olduğu yan menü olur
 		  type="secondary"
@@ -201,7 +203,7 @@ const ProjectPage = () => {
 				onAddButtonClick={handlePageCreation}
 				onNextButtonClick={handleNext}
 				onPreviousButton={handlePrevious}/>
-	  </NotesContext.Provider>
+	  </NotesContextProvider>
 	</div>
   );
 };

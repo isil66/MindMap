@@ -30,7 +30,7 @@ const Tiptap = ({
 				  onChange,
 				  content,
 				  pageIndex,
-  				  pageId,
+				  pageId,
 				  totalPageCount,
 				  onSave,
 				  showPreviousButton,
@@ -47,6 +47,8 @@ const Tiptap = ({
 	console.log("content", content);
 	onChange(newContent);
   };
+
+
   const handleAutosave = () => {
 	setAutosaveInProgress(true);
 	setTimeout(() => {
@@ -58,6 +60,11 @@ const Tiptap = ({
 	if (editor) {
 	  editor.commands.setContent(content);
 	}
+	console.log("useeffect içi", notes, "----------\n", setNotes);
+	setNotes(
+	  [{id: 1, content: "test 1"}]
+	);
+	console.log("setContext yapılıy");
   }, [pageIndex]);
 
   useEffect(() => {
@@ -159,7 +166,7 @@ const Tiptap = ({
 			<link
 			  href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"/>
 		  </Head>
-		  <Toolbar editor={editor} content={content} pageId={pageId} notes={notes} setNotes={setNotes}/>
+		  <Toolbar editor={editor} content={content} pageId={pageId}/>
 		  <Paper>
 			<div className={styles.editorContentWrapper}>
 			  <EditorContent editor={editor}/>

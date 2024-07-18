@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect, useRef, useContext} from "react";
 import {Editor} from "@tiptap/react";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -23,10 +23,11 @@ import {
   Redo,
   Code
 } from "lucide-react";
+import {NotesContext} from "@/components/MyContext";
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
-const Toolbar = ({editor, content, pageId, notes, setNotes}) => {
+const Toolbar = ({editor, content, pageId}) => {
   const noteIdRef = useRef(0);
   const takeNoteRef = useRef(true);
   const [showTextField, setShowTextField] = useState(false);
@@ -36,7 +37,8 @@ const Toolbar = ({editor, content, pageId, notes, setNotes}) => {
   const toRef = useRef(0);
   const noteRef = useRef({page: -1, content: "test"})
   const [note, setNote] = useState({page: -1, content: "test"});
-
+  const {notes, setNotes} = useContext(NotesContext);//doğru
+  console.log("hepsi:",notes);
   const saveNote = async () => {
 
 	try {
@@ -56,7 +58,10 @@ const Toolbar = ({editor, content, pageId, notes, setNotes}) => {
 		  id: responseJson.id,
 		  content: responseJson.content,
 		}
-		setNote(noteRef.current);
+		setNotes((prevNotes) => {
+		  console.log("prevnotes",prevNotes);
+		  return [...notes, noteRef.current]
+		});
 		console.log("all notes toolbar:", notes, "bruh noteref", noteRef.current, "note:", note);
 
 	  } else {
@@ -70,7 +75,7 @@ const Toolbar = ({editor, content, pageId, notes, setNotes}) => {
   useEffect(() => {
 	if (noteRef.current.id>0) {
 	  console.log("noteref changed:", noteRef.current);
-	  setNotes((prevNotes) => [...prevNotes, noteRef.current]);
+
 	}
   }, [note]);
 

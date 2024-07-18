@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import Message from '@/components/Message';
 import FolderIconSvg from '../../../public/folder-svgrepo-com.svg';
 import {
@@ -19,6 +19,7 @@ import {
 import {createSvgIcon} from '@mui/material/utils';
 import style from '../../styles/FolderIcon.module.css';
 import {useRouter} from 'next/router';
+
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
@@ -69,6 +70,9 @@ const Page = () => {
     const [renameDialogOpen, setRenameDialogOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [renamedProjectName, setRenamedProjectName] = useState('');
+
+
+
 
 
     const fetchData = async () => {
@@ -219,7 +223,13 @@ const Page = () => {
 
     useEffect(() => {
         fetchData();
+
     }, []);
+
+
+
+
+
 
     return (
         <Stack spacing={2}>
