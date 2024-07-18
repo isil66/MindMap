@@ -26,9 +26,7 @@ const ProjectPage = () => {
   const router = useRouter();
   const {prj_id} = router.query;//gets the url and finds the dynamic id//NEED CURLY BRACES TO DESTRUCT
 
-  const backToDashboard = () =>{
-	router.push('/dashboard/');
-  }
+
 
   const handleContentChange = (reason) => {
 	setContent(reason)
@@ -176,20 +174,21 @@ const ProjectPage = () => {
 	<div>
 	  <NotesContext.Provider value={{notes, setNotes}}>
 		<AwesomeButton
-		  onPress={backToDashboard}//kısa fonksiyonları buraya yazabilirsin
+		  onPress={()=>{router.push('/dashboard/');}} //maybe projelerin hepsinin olduğu yan menü olur
 		  type="secondary"
 		  style={{
 			position: "absolute",
-			top: "10px",
-			left: "10px",
+			top: "10%",
+			left: "3%",
 			buttonPrimaryColor: "#230a10",
-			height: "53px",
+			height: "40px",
+			width: "80px",
 			fontSize: "16px",
 			borderRadius: "10px",
 			primaryColor: "#00000"
 		  }}
 		>
-		  Dashboard
+		  Projects
 		</AwesomeButton>
 		<Tiptap content={content}
 				onChange={(newContent) => handleContentChange(newContent)}
