@@ -150,6 +150,8 @@ const Tiptap = ({
 
   const percentage = editor ? Math.round((100 / limit) * editor.storage.characterCount.characters()) : 0;
 
+  console.log("hepsi:",notes);
+
   // <div className={`character-count ${editor.storage.characterCount.characters() === limit ? 'character-count--warning' : ''}`}>
   // this doesnt work since we pass a literal string, but instead we need to pass the css object innerds
   if (!editor) {

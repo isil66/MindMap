@@ -9,8 +9,8 @@ import 'react-awesome-button/dist/styles.css';
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
 const ProjectPage = () => {
-  const notesFromContext = useContext(NotesContext);
-  const [notes, setNotes] = useState(notesFromContext);
+  const notesFromContext = useContext(NotesContext);//todo wrong, i mean this aint the global one
+  const [notes, setNotes] = useState(notesFromContext);// todo wrong
 
   const pagesRef = useRef([
 	{id: 1, content: 'Page 1 content'},
@@ -151,9 +151,7 @@ const ProjectPage = () => {
 		} else {
 		  console.log("succes");
 		  const responseJson = await response.json();
-		  console.log(responseJson);
-		  console.log("anaam", responseJson.pages[pageIndex].content)
-		  console.log("babam", responseJson.pages[pageIndex].id)
+
 		  //setCurrentPageID(responseJson.pages[pageIndex].id);
 		  contentRef.current = responseJson.pages[pageIndex].content;
 		  setContent(responseJson.pages[pageIndex].content);
@@ -174,7 +172,7 @@ const ProjectPage = () => {
 
   return (
 	<div>
-	  <NotesContextProvider value={{notes, setNotes}}>
+	  <NotesContextProvider>
 		<AwesomeButton
 		  onPress={()=>{router.push('/dashboard/');}} //maybe projelerin hepsinin olduğu yan menü olur
 		  type="secondary"
