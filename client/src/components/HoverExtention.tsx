@@ -111,26 +111,28 @@ const HoverExtension = ({ setNotes, getLatestNotes }) => {
                   console.log("notes all:", notes);
                   console.log("noteId: ",noteId);
                   let currentNote =notes.find((item: { id: number; }) => item.id ===  parseInt(noteId,10));
-                  console.log("hh", currentNote.content);
+                  //console.log("hh", currentNote.content);
                   previousColor = target.style.backgroundColor;
                   target.style.backgroundColor = 'plum';
 
                   console.log(getLatestNotes());
 
-                  tippy(target, {
-                    content: `${currentNote.content}`,
-                    hideOnClick: false,
-                    maxWidth: 200,
-                    appendTo: () => document.body,
-                    delay: [0, 500],
-                    arrow: true,
-                    onShow(instance) {
-                      const existingTippy = (target as any)._tippy;
-                      if (existingTippy && existingTippy !== instance) {
-                        existingTippy.destroy();
-                      }
-                    },
-                  });
+                  if(currentNote){
+                    tippy(target, {
+                      content: `${currentNote.content}`,
+                      hideOnClick: false,
+                      maxWidth: 200,
+                      appendTo: () => document.body,
+                      delay: [0, 500],
+                      arrow: true,
+                      onShow(instance) {
+                        const existingTippy = (target as any)._tippy;
+                        if (existingTippy && existingTippy !== instance) {
+                          existingTippy.destroy();
+                        }
+                      },
+                    });
+                  }
 
                   if ((target as any)._tippy) {
                     (target as any)._tippy.show(1);
