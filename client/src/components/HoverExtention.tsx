@@ -119,6 +119,7 @@ const HoverExtension = ({ setNotes, getLatestNotes }) => {
                   tippy(target, {
                     content: `${currentNote.content}`,
                     hideOnClick: false,
+                    maxWidth: 200,
                     appendTo: () => document.body,
                     delay: [0, 500],
                     arrow: true,

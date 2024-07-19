@@ -38,10 +38,11 @@ const Toolbar = ({editor, content, pageId}) => {
   const noteRef = useRef({page: -1, content: "test"})
   const [note, setNote] = useState({page: -1, content: "test"});
   const {notes, setNotes, getLatestNotes} = useContext(NotesContext);//doğru
-  console.log("hepsi:",notes);
-  console.log("noteidref", noteIdRef.current);
-  const saveNote = async () => {
 
+  console.log("hepsi:", notes);
+  console.log("noteidref", noteIdRef.current);
+
+  const saveNote = async () => {
 	try {
 	  const storedToken = localStorage.getItem('authToken');
 	  const response = await fetch(`${BASE_URL}/dashboard/page/notes/`, {
@@ -60,7 +61,7 @@ const Toolbar = ({editor, content, pageId}) => {
 		  content: responseJson.content,
 		}
 		setNotes((prevNotes) => {
-		  console.log("prevnotes",prevNotes);
+		  console.log("prevnotes", prevNotes);
 		  return [...notes, noteRef.current]
 		});
 		console.log("all notes toolbar:", notes, "bruh noteref", noteRef.current, "note:", note);
@@ -72,13 +73,6 @@ const Toolbar = ({editor, content, pageId}) => {
 	  console.error('Error fetching dashboard data:', error.message);
 	}
   };
-
-  useEffect(() => {
-	if (noteRef.current.id>0) {
-	  console.log("noteref changed:", noteRef.current);
-
-	}
-  }, [note]);
 
   const getNoteIdStartingPoint = async () => {
 	try {
@@ -99,6 +93,12 @@ const Toolbar = ({editor, content, pageId}) => {
   };
 
   useEffect(() => {
+	if (showTextField) {
+	  editor.commands.blur();
+	}
+  }, [showTextField]);
+
+  useEffect(() => {
 	getNoteIdStartingPoint();
   }, []);
 
@@ -106,8 +106,12 @@ const Toolbar = ({editor, content, pageId}) => {
 	return null;
   }
 
+  const decrementNoteId = () => {
+	noteIdRef.current--;
+  }
+
   const handleClickTakeNoteStart = (e) => {
-	fromRef.current = editor.state.selection['ranges'][0]['$from']['pos']
+	fromRef.current = editor.state.selection['ranges'][0]['$from']['pos'];
 	e.preventDefault();
 	takeNoteRef.current = false;
 	const newNoteId = noteIdRef.current + 1;
@@ -116,7 +120,7 @@ const Toolbar = ({editor, content, pageId}) => {
   };
 
   const handleClickTakeNoteEnd = (e) => {
-	toRef.current = editor.state.selection['ranges'][0]['$to']['pos']
+	toRef.current = editor.state.selection['ranges'][0]['$to']['pos'];
 	e.preventDefault();
 	takeNoteRef.current = true;
 	editor.chain().focus().toggleHighlight({color: "#500bb6", note_id: noteIdRef.current}).run();
@@ -161,6 +165,7 @@ const Toolbar = ({editor, content, pageId}) => {
 	setNoteContent('');
 	editor.commands.setTextSelection({from: fromRef.current, to: toRef.current});
 	editor.chain().focus().unsetHighlight().run();
+	decrementNoteId();
   };
 
   const handleSave = () => {
