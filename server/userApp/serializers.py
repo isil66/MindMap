@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 
 # model (serialization ->) json
 # json (deserialization ->) model
+# But when you want to deserialize you pass the data with a data kwarg.
+# serializer = CommentSerializer(data=data)
 class UserCreationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

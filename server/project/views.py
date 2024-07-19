@@ -62,6 +62,7 @@ class ProjectAPIView(viewsets.ModelViewSet):
                 'content': '<h1>Start Your Writing Journey</h1><p></p><p></p><p></p><p></p>'
             }
             first_page_serializer = PageSerializer(data=first_page_data)
+            # Modele çeviriyo (deserialized) since we used the data arg
             if first_page_serializer.is_valid():
                 first_page_serializer.save()
                 pages = [first_page_serializer.instance]
@@ -116,13 +117,15 @@ class PageView(viewsets.ModelViewSet):
     # GET dashboard/page/{id}
     def retrieve(self, request, *args, **kwargs):
         page_instance = self.get_object()  # get the page instance with given id
-        notes = Note.objects.filter(page=page_instance).order_by('id')
 
-        print("notes:", notes)
+        notes = Note.objects.filter(page=page_instance).order_by('id')
+        print("notes backend called:", notes)
         if notes.exists():
-            serializer = NoteSerializer(notes, many=True)
-            if serializer.is_valid():
-                return Response(serializer.data, status=status.HTTP_200_OK)
+            print("notes exist")
+            notes_serializer = NoteSerializer(notes, many=True)
+            return Response({
+                'notes': notes_serializer.data
+            }, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -147,7 +150,7 @@ class NoteView(viewsets.ModelViewSet):
         }
         return Response(response, status=status.HTTP_200_OK)
 
-    #  POST dashboard/page/
+    #  POST dashboard/page/notes/
     def create(self, request, *args, **kwargs):
         print("backened post")
         data = request.data.copy()  # to not modify original data

@@ -24,7 +24,7 @@ import HoverExtensionWithNodeView from './HoverExtentionWithNodeView.jsx'
 import {NotesContext} from "@/components/MyContext";
 
 //No, you should be able to listen to mouseover and mouseout DOM events (via the handleDOMEvents prop
-
+const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 const limit = 280;
 const Tiptap = ({
 				  onChange,
@@ -56,9 +56,34 @@ const Tiptap = ({
 	}, 2000);
   };
 
+  const getNotesOfThePage = async ()=>{
+	try {
+	  const storedToken = localStorage.getItem('authToken');
+	  const response = await fetch(`${BASE_URL}/dashboard/page/${pageId}/`, {
+		method: 'GET',
+		headers: {
+		  'Content-Type': 'application/json',
+		  Authorization: `Token ${storedToken}`,
+		},
+
+	  });
+	  if (!response.ok) {
+		console.log("there is no note");
+	  } else {
+		console.log("succesfully fetched notes");
+		const responseJson = await response.json();
+		//setNotes();
+		console.log(responseJson);
+	  }
+	} catch (error) {
+	  console.log("err yedük yakala", error);
+	}
+  }
+
   useEffect(() => {
 	if (editor) {
 	  editor.commands.setContent(content);
+	  getNotesOfThePage();
 	}
   }, [pageIndex]);
 
@@ -129,6 +154,7 @@ const Tiptap = ({
 	onCreate({editor}) {
 
 	  editor.commands.setContent(content);
+	  getNotesOfThePage();
 	},
 	editorProps: {
 	  attributes: {
@@ -145,7 +171,7 @@ const Tiptap = ({
 
   const percentage = editor ? Math.round((100 / limit) * editor.storage.characterCount.characters()) : 0;
 
-  console.log("hepsi:", notes);
+
 
   // <div className={`character-count ${editor.storage.characterCount.characters() === limit ? 'character-count--warning' : ''}`}>
   // this doesnt work since we pass a literal string, but instead we need to pass the css object innerds

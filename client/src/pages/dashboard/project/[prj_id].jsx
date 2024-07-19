@@ -102,6 +102,7 @@ const ProjectPage = () => {
 	}
   };
 
+
   const handleSave = async () => {
 	updatePageContent(pageIndex, content);
 	try {
@@ -132,6 +133,7 @@ const ProjectPage = () => {
 	setNotes([{id: 15, content: "son"}]);
 	console.log("pageIndex updated,", content);
 	console.log("allnotes prj",notes);
+	//getNotesOfThePage();
   }, [pageIndex]);
 
   useEffect(() => {
