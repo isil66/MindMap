@@ -80,6 +80,10 @@ const HoverExtension = ({setNotes, getLatestNotes, showTextFieldAtCursor}) => {
           const cursorPosition = view.state.selection.from;
           console.log('Cursor position:', view.coordsAtPos(cursorPosition));
           showTextFieldAtCursor(view.coordsAtPos(cursorPosition), view.coordsAtPos(cursorPosition), target.getAttribute('note_id'));
+          contextMenu.remove();
+          popperInstance?.destroy();
+          contextMenu = null;
+
         });
         document.body.appendChild(contextMenu);
 
