@@ -64,7 +64,6 @@ const Toolbar = ({editor, content, pageId}) => {
 		  console.log("prevnotes", prevNotes);
 		  return [...notes, noteRef.current]
 		});
-		console.log("all notes toolbar:", notes, "bruh noteref", noteRef.current, "note:", note);
 
 	  } else {
 		console.log("HTTP error", response.status, response.statusText);

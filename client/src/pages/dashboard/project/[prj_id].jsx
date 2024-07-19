@@ -28,7 +28,6 @@ const ProjectPage = () => {
   const {prj_id} = router.query;//gets the url and finds the dynamic id//NEED CURLY BRACES TO DESTRUCT
 
 
-
   const handleContentChange = (reason) => {
 	setContent(reason)
   }
@@ -97,6 +96,7 @@ const ProjectPage = () => {
 		contentRef.current = responseJson.content;
 		setPageId(pagesRef.current[pagesRef.current.length - 1].id);
 		setContent(responseJson.content);
+		setNotes([]);
 	  }
 	} catch (error) {
 	  console.log("err yedük yakala", error);
@@ -129,7 +129,7 @@ const ProjectPage = () => {
 	}
   };
 
-  const getNotesOfThePage = async ()=>{
+  const getNotesOfThePage = async () => {
 	try {
 	  const storedToken = localStorage.getItem('authToken');
 	  const response = await fetch(`${BASE_URL}/dashboard/page/${pagesRef.current[pageIndex].id}/`, {
@@ -157,8 +157,10 @@ const ProjectPage = () => {
   useEffect(() => {
 	setContent(contentRef.current);
 	console.log("pageIndex updated,", content);
-	console.log("allnotes prj effect",notes);
-	//getNotesOfThePage();
+	console.log("allnotes prj effect", notes);
+
+	getNotesOfThePage();
+
   }, [pageIndex]);
 
   useEffect(() => {
@@ -199,38 +201,40 @@ const ProjectPage = () => {
 	return null;
   }
 
-  console.log("allnotes prj",notes);
+  console.log("allnotes prj", notes);
   return (
 	<div>
 
-		<AwesomeButton
-		  onPress={()=>{router.push('/dashboard/');}} //maybe projelerin hepsinin olduğu yan menü olur
-		  type="secondary"
-		  style={{
-			position: "absolute",
-			top: "10%",
-			left: "3%",
-			buttonPrimaryColor: "#230a10",
-			height: "40px",
-			width: "100px",
-			fontSize: "16px",
-			borderRadius: "10px",
-			primaryColor: "#00000"
-		  }}
-		>
-		  ⬅Projects
-		</AwesomeButton>
-		<Tiptap content={content}
-				onChange={(newContent) => handleContentChange(newContent)}
-				pageIndex={pageIndex}
-				pageId={pageId}
-				totalPageCount={totalPageCount}
-				onSave={handleSave}
-				showAddButton={pageIndex + 1 === totalPageCount}
-				showPreviousButton={pageIndex !== 0}
-				onAddButtonClick={handlePageCreation}
-				onNextButtonClick={handleNext}
-				onPreviousButton={handlePrevious}/>
+	  <AwesomeButton
+		onPress={() => {
+		  router.push('/dashboard/');
+		}} //maybe projelerin hepsinin olduğu yan menü olur
+		type="secondary"
+		style={{
+		  position: "absolute",
+		  top: "10%",
+		  left: "3%",
+		  buttonPrimaryColor: "#230a10",
+		  height: "40px",
+		  width: "100px",
+		  fontSize: "16px",
+		  borderRadius: "10px",
+		  primaryColor: "#00000"
+		}}
+	  >
+		⬅Projects
+	  </AwesomeButton>
+	  <Tiptap content={content}
+			  onChange={(newContent) => handleContentChange(newContent)}
+			  pageIndex={pageIndex}
+			  pageId={pageId}
+			  totalPageCount={totalPageCount}
+			  onSave={handleSave}
+			  showAddButton={pageIndex + 1 === totalPageCount}
+			  showPreviousButton={pageIndex !== 0}
+			  onAddButtonClick={handlePageCreation}
+			  onNextButtonClick={handleNext}
+			  onPreviousButton={handlePrevious}/>
 
 	</div>
   );

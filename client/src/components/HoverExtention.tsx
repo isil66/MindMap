@@ -112,12 +112,14 @@ const HoverExtension = ({ setNotes, getLatestNotes }) => {
                   console.log("noteId: ",noteId);
                   let currentNote =notes.find((item: { id: number; }) => item.id ===  parseInt(noteId,10));
                   //console.log("hh", currentNote.content);
-                  previousColor = target.style.backgroundColor;
-                  target.style.backgroundColor = 'plum';
+
 
                   console.log(getLatestNotes());
 
                   if(currentNote){
+                    previousColor = target.style.backgroundColor;
+                    target.style.backgroundColor = 'plum';
+
                     tippy(target, {
                       content: `${currentNote.content}`,
                       hideOnClick: false,
