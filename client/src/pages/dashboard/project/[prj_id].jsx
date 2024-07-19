@@ -9,8 +9,9 @@ import 'react-awesome-button/dist/styles.css';
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
 const ProjectPage = () => {
-  const notesFromContext = useContext(NotesContext);//todo wrong, i mean this aint the global one
-  const [notes, setNotes] = useState(notesFromContext);// todo wrong
+  // const notesFromContext = useContext(NotesContext);//todo wrong, i mean this aint the global one
+  // const [notes, setNotes] = useState(notesFromContext);// todo wrong
+  const {notes, setNotes, getLatestNotes} = useContext(NotesContext);
 
   const pagesRef = useRef([
 	{id: 1, content: 'Page 1 content'},
@@ -128,11 +129,35 @@ const ProjectPage = () => {
 	}
   };
 
+  const getNotesOfThePage = async ()=>{
+	try {
+	  const storedToken = localStorage.getItem('authToken');
+	  const response = await fetch(`${BASE_URL}/dashboard/page/${pagesRef.current[pageIndex].id}/`, {
+		method: 'GET',
+		headers: {
+		  'Content-Type': 'application/json',
+		  Authorization: `Token ${storedToken}`,
+		},
+
+	  });
+	  if (!response.ok) {
+		console.log("there is no note");
+	  } else {
+		console.log("succesfully fetched notes");
+		const responseJson = await response.json();
+		setNotes(responseJson.notes);
+
+	  }
+	} catch (error) {
+	  console.log("err yedük yakala", error);
+	}
+  }
+
+
   useEffect(() => {
 	setContent(contentRef.current);
-	setNotes([{id: 15, content: "son"}]);
 	console.log("pageIndex updated,", content);
-	console.log("allnotes prj",notes);
+	console.log("allnotes prj effect",notes);
 	//getNotesOfThePage();
   }, [pageIndex]);
 
@@ -161,20 +186,23 @@ const ProjectPage = () => {
 		  pagesRef.current = responseJson.pages;
 		  setPageId(pagesRef.current[pageIndex].id);
 		  setTotalPageCount(responseJson.total_page_count);
+		  getNotesOfThePage();
 		}
 	  } catch (error) {
 		console.log("err yedük yakala", error);
 	  }
 	})();
+
   }, [prj_id]);
 
   if (!content) {
 	return null;
   }
 
+  console.log("allnotes prj",notes);
   return (
 	<div>
-	  <NotesContextProvider>
+
 		<AwesomeButton
 		  onPress={()=>{router.push('/dashboard/');}} //maybe projelerin hepsinin olduğu yan menü olur
 		  type="secondary"
@@ -203,7 +231,7 @@ const ProjectPage = () => {
 				onAddButtonClick={handlePageCreation}
 				onNextButtonClick={handleNext}
 				onPreviousButton={handlePrevious}/>
-	  </NotesContextProvider>
+
 	</div>
   );
 };

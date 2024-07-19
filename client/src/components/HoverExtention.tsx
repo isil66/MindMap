@@ -103,10 +103,11 @@ const HoverExtension = ({ setNotes, getLatestNotes }) => {
             handleDOMEvents: {
               mouseover(view, event) {
                 const target = event.target as HTMLElement;
-
+                const notes = getLatestNotes();
+                console.log("notes all:", notes);
                 if (target.tagName === 'MARK' && target.hasAttribute('note_id') && target.getAttribute('note_id') !== '0') {
                   const noteId = target.getAttribute('note_id');
-                  let notes = getLatestNotes();
+
                   console.log("notes all:", notes);
                   console.log("noteId: ",noteId);
                   let currentNote =notes.find((item: { id: number; }) => item.id ===  parseInt(noteId,10));

@@ -56,34 +56,11 @@ const Tiptap = ({
 	}, 2000);
   };
 
-  const getNotesOfThePage = async ()=>{
-	try {
-	  const storedToken = localStorage.getItem('authToken');
-	  const response = await fetch(`${BASE_URL}/dashboard/page/${pageId}/`, {
-		method: 'GET',
-		headers: {
-		  'Content-Type': 'application/json',
-		  Authorization: `Token ${storedToken}`,
-		},
-
-	  });
-	  if (!response.ok) {
-		console.log("there is no note");
-	  } else {
-		console.log("succesfully fetched notes");
-		const responseJson = await response.json();
-		//setNotes();
-		console.log(responseJson);
-	  }
-	} catch (error) {
-	  console.log("err yedük yakala", error);
-	}
-  }
 
   useEffect(() => {
 	if (editor) {
 	  editor.commands.setContent(content);
-	  getNotesOfThePage();
+
 	}
   }, [pageIndex]);
 
@@ -154,7 +131,7 @@ const Tiptap = ({
 	onCreate({editor}) {
 
 	  editor.commands.setContent(content);
-	  getNotesOfThePage();
+
 	},
 	editorProps: {
 	  attributes: {
