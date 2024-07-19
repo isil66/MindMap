@@ -38,6 +38,7 @@ const Tiptap = ({
   const [autosaveInProgress, setAutosaveInProgress] = useState(false);
   const [showTextField, setShowTextField] = useState(false);
   const [textFieldPosition, setTextFieldPosition] = useState({top: 0, left: 0});
+  const [noteContent, setNoteContent] = useState('');
 
 
   const showTextFieldAtCursor = (start = null, end = null, noteId = null) => {
@@ -48,8 +49,12 @@ const Tiptap = ({
 	  start = editor.view.coordsAtPos(from);
 	  end = editor.view.coordsAtPos(to);
 	}
-
-
+	const latestNotes= getLatestNotes();
+	console.log("noteid", noteId);
+	const filler = latestNotes.find((note) => note.id === parseInt(noteId,10)).content;
+	console.log("filler",filler);
+	console.log("ediaağt",latestNotes);
+	setNoteContent(filler);
 	const top = (start.top + end.top) / 2 - 30;
 	const left = (start.left + end.left) / 2;
 	setTextFieldPosition({top, left});
@@ -169,6 +174,8 @@ const Tiptap = ({
 			isTextFieldShown={showTextField}
 			setIsTextFieldShown={setShowTextField}
 			textFieldPlacement={textFieldPosition}
+			noteContent={noteContent}
+			setNoteContent={setNoteContent}
 		  />
 		  <Paper>
 			<div className={styles.editorContentWrapper}>

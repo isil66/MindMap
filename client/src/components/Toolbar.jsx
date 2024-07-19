@@ -27,10 +27,19 @@ import {NotesContext} from "@/components/MyContext";
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
-const Toolbar = ({editor, content, pageId, positionTextField, isTextFieldShown, setIsTextFieldShown, textFieldPlacement}) => {
+const Toolbar = ({
+				   editor,
+				   content,
+				   pageId,
+				   positionTextField,
+				   isTextFieldShown,
+				   setIsTextFieldShown,
+				   textFieldPlacement,
+				   noteContent,
+				   setNoteContent,
+				 }) => {
   const noteIdRef = useRef(0);
   const takeNoteRef = useRef(true);
-  const [noteContent, setNoteContent] = useState('hahah');//TODO burayı setle for default on textfield
   const fromRef = useRef(0);
   const toRef = useRef(0);
   const noteRef = useRef({page: -1, content: "test"})
