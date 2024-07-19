@@ -27,12 +27,12 @@ import {NotesContext} from "@/components/MyContext";
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
-const Toolbar = ({editor, content, pageId}) => {
+const Toolbar = ({editor, content, pageId, textFieldPositioningFunction}) => {
   const noteIdRef = useRef(0);
   const takeNoteRef = useRef(true);
   const [showTextField, setShowTextField] = useState(false);
-  const [noteContent, setNoteContent] = useState('');
   const [textFieldPosition, setTextFieldPosition] = useState({top: 0, left: 0});
+  const [noteContent, setNoteContent] = useState('hahah');//TODO burayı setle for default on textfield
   const fromRef = useRef(0);
   const toRef = useRef(0);
   const noteRef = useRef({page: -1, content: "test"})
@@ -148,8 +148,11 @@ const Toolbar = ({editor, content, pageId}) => {
 	}
   };
 
-  const showTextFieldAtCursor = () => {
-	const {from, to} = editor.state.selection;//bu da prosemirrorden
+  const showTextFieldAtCursor = (from = null, to = null, noteId = null) => {
+	if (from === null || to === null) {
+	  from = editor.state.selection.from;
+	  to = editor.state.selection.to;
+	}
 	const start = editor.view.coordsAtPos(from);//prosemirror view api'ından bunlar
 	const end = editor.view.coordsAtPos(to);
 

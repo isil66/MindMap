@@ -43,9 +43,26 @@ const Tiptap = ({
   const [editable, setEditable] = useState(true);//set editability for upcoming stuff
   const debounceContent = useDebounce(content, 5000);
   const [autosaveInProgress, setAutosaveInProgress] = useState(false);
+  const [showTextField, setShowTextField] = useState(false);
+  const [textFieldPosition, setTextFieldPosition] = useState({top: 0, left: 0});
+
   const handleChange = (newContent) => {
 	console.log("content", content);
 	onChange(newContent);
+  };
+
+  const showTextFieldAtCursor = (from = null, to = null, noteId = null) => {
+	if (from === null || to === null) {
+	  from = editor.state.selection.from;
+	  to = editor.state.selection.to;
+	}
+	const start = editor.view.coordsAtPos(from);//prosemirror view api'ından bunlar
+	const end = editor.view.coordsAtPos(to);
+
+	const top = (start.top + end.top) / 2 - 30;
+	const left = (start.left + end.left) / 2;
+	setTextFieldPosition({top, left});
+	setShowTextField(true);
   };
 
 
