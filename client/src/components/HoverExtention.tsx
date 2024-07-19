@@ -1,15 +1,15 @@
-import { Extension } from '@tiptap/core';
-import { Plugin, PluginKey } from 'prosemirror-state';
+import {Extension} from '@tiptap/core';
+import {Plugin, PluginKey} from 'prosemirror-state';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
-import { createPopper, Instance } from '@popperjs/core';//positioning yapıyor sadece
-import { NotesContext } from './MyContext';
+import {createPopper, Instance} from '@popperjs/core';//positioning yapıyor sadece
+import {NotesContext} from './MyContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
-const HoverExtension = ({ setNotes, getLatestNotes }) => {
+const HoverExtension = ({setNotes, getLatestNotes}) => {
   return Extension.create({
     name: 'hover',
 
@@ -36,7 +36,8 @@ const HoverExtension = ({ setNotes, getLatestNotes }) => {
 
           } else {
             console.log('success in deleting note');
-            //todo update the GLOBAL notes
+            let notes = getLatestNotes();
+            setNotes(notes.filter((item: { id: number; }) => item.id !== parseInt(noteID, 10)));
           }
         } catch (error) {
 
@@ -93,6 +94,7 @@ const HoverExtension = ({ setNotes, getLatestNotes }) => {
             document.removeEventListener('click', handleClickOutside);
           }
         }
+
         document.addEventListener('click', handleClickOutside);
       }
 
@@ -109,15 +111,15 @@ const HoverExtension = ({ setNotes, getLatestNotes }) => {
                   const noteId = target.getAttribute('note_id');
 
                   console.log("notes all:", notes);
-                  console.log("noteId: ",noteId);
-                  let currentNote =notes.find((item: { id: number; }) => item.id ===  parseInt(noteId,10));
-                  //console.log("hh", currentNote.content);
+                  console.log("noteId: ", noteId);
+                  let currentNote = notes.find((item: { id: number; }) => item.id === parseInt(noteId, 10));
+                  previousColor = target.style.backgroundColor;
 
 
                   console.log(getLatestNotes());
 
-                  if(currentNote){
-                    previousColor = target.style.backgroundColor;
+                  if (currentNote) {
+
                     target.style.backgroundColor = 'plum';
 
                     tippy(target, {
