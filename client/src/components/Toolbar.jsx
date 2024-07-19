@@ -27,11 +27,9 @@ import {NotesContext} from "@/components/MyContext";
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
-const Toolbar = ({editor, content, pageId, textFieldPositioningFunction}) => {
+const Toolbar = ({editor, content, pageId, positionTextField, isTextFieldShown, setIsTextFieldShown, textFieldPlacement}) => {
   const noteIdRef = useRef(0);
   const takeNoteRef = useRef(true);
-  const [showTextField, setShowTextField] = useState(false);
-  const [textFieldPosition, setTextFieldPosition] = useState({top: 0, left: 0});
   const [noteContent, setNoteContent] = useState('hahah');//TODO burayı setle for default on textfield
   const fromRef = useRef(0);
   const toRef = useRef(0);
@@ -92,10 +90,10 @@ const Toolbar = ({editor, content, pageId, textFieldPositioningFunction}) => {
   };
 
   useEffect(() => {
-	if (showTextField) {
+	if (isTextFieldShown) {
 	  editor.commands.blur();
 	}
-  }, [showTextField]);
+  }, [isTextFieldShown]);
 
   useEffect(() => {
 	getNoteIdStartingPoint();
@@ -123,7 +121,7 @@ const Toolbar = ({editor, content, pageId, textFieldPositioningFunction}) => {
 	e.preventDefault();
 	takeNoteRef.current = true;
 	editor.chain().focus().toggleHighlight({color: "#500bb6", note_id: noteIdRef.current}).run();
-	showTextFieldAtCursor();
+	positionTextField();
   };
 
   const selectToTakeNote = (e) => {
@@ -133,7 +131,7 @@ const Toolbar = ({editor, content, pageId, textFieldPositioningFunction}) => {
 	fromRef.current = editor.state.selection['ranges'][0]['$from']['pos'];
 	console.log("selection note id to be", newNoteId);
 	editor.chain().focus().toggleHighlight({color: "#500bb6", note_id: newNoteId}).run();
-	showTextFieldAtCursor();
+	positionTextField();
   };
 
   const handleNoteToggles = (e) => {
@@ -148,22 +146,9 @@ const Toolbar = ({editor, content, pageId, textFieldPositioningFunction}) => {
 	}
   };
 
-  const showTextFieldAtCursor = (from = null, to = null, noteId = null) => {
-	if (from === null || to === null) {
-	  from = editor.state.selection.from;
-	  to = editor.state.selection.to;
-	}
-	const start = editor.view.coordsAtPos(from);//prosemirror view api'ından bunlar
-	const end = editor.view.coordsAtPos(to);
-
-	const top = (start.top + end.top) / 2 - 30;
-	const left = (start.left + end.left) / 2;
-	setTextFieldPosition({top, left});
-	setShowTextField(true);
-  };
 
   const handleCancel = () => {
-	setShowTextField(false);
+	setIsTextFieldShown(false);
 	setNoteContent('');
 	editor.commands.setTextSelection({from: fromRef.current, to: toRef.current});
 	editor.chain().focus().unsetHighlight().run();
@@ -174,7 +159,7 @@ const Toolbar = ({editor, content, pageId, textFieldPositioningFunction}) => {
 	saveNote();
 	console.log("PAGEID", pageId);
 	console.log('Saved note content:', noteContent);
-	setShowTextField(false);
+	setIsTextFieldShown(false);
 	setNoteContent('');
   };
 
@@ -324,11 +309,11 @@ const Toolbar = ({editor, content, pageId, textFieldPositioningFunction}) => {
 		  </IconButton>
 		</Tooltip>
 	  </div>
-	  {showTextField && (
+	  {isTextFieldShown && (
 		<div style={{
 		  position: 'absolute',
-		  top: textFieldPosition.top,
-		  left: textFieldPosition.left,
+		  top: textFieldPlacement.top,
+		  left: textFieldPlacement.left,
 		  zIndex: 1000,
 		  background: '#fff',
 		  padding: '10px',

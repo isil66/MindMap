@@ -183,7 +183,15 @@ const Tiptap = ({
 			<link
 			  href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"/>
 		  </Head>
-		  <Toolbar editor={editor} content={content} pageId={pageId}/>
+		  <Toolbar
+			editor={editor}
+			content={content}
+			pageId={pageId}
+			positionTextField={showTextFieldAtCursor}
+			isTextFieldShown={showTextField}
+			setIsTextFieldShown={setShowTextField}
+			textFieldPlacement={textFieldPosition}
+		  />
 		  <Paper>
 			<div className={styles.editorContentWrapper}>
 			  <EditorContent editor={editor}/>
