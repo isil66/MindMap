@@ -78,8 +78,8 @@ const HoverExtension = ({setNotes, getLatestNotes, showTextFieldAtCursor}) => {
 
         editButton.addEventListener('click', () => {
           const cursorPosition = view.state.selection.from;
-          console.log('Cursor position:', cursorPosition);
-          //showTextFieldAtCursor(cursorPosition, cursorPosition, target.getAttribute('note_id'));
+          console.log('Cursor position:', view.coordsAtPos(cursorPosition));
+          showTextFieldAtCursor(view.coordsAtPos(cursorPosition), view.coordsAtPos(cursorPosition), target.getAttribute('note_id'));
         });
         document.body.appendChild(contextMenu);
 
