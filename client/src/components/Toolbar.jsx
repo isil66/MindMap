@@ -158,40 +158,42 @@ const Toolbar = ({
   };
 
   function closeTextField() {
+	setNoteIdToEdit(null);
 	setIsTextFieldShown(false);
 	setNoteContent('');
   }
 
   const saveEdit = async (noteId) => {
-	// try {
-	//   const storedToken = localStorage.getItem('authToken');
-	//   const response = await fetch(`${BASE_URL}/dashboard/page/notes/${noteId}`, {
-	// 	method: 'PATCH',
-	// 	headers: {
-	// 	  'Content-Type': 'application/json',
-	// 	  Authorization: `Token ${storedToken}`,
-	// 	},
-	// 	body: JSON.stringify({page: pageId, content: noteContent}),
-	//   });
-	//   if (response.ok) {
-	// 	const responseJson = await response.json();
-	// 	console.log("success of save note:", responseJson);
-	// 	noteRef.current = {
-	// 	  id: responseJson.id,
-	// 	  content: responseJson.content,
-	// 	}
-	// 	setNotes((prevNotes) => {
-	// 	  console.log("prevnotes", prevNotes);
-	// 	  return [...notes, noteRef.current]
-	// 	});
-	//   } else {
-	// 	console.log("HTTP error", response.status, response.statusText);
-	//   }
-	//   closeTextField();
-	//	 setNoteIdToEdit(null);
-	// } catch (error) {
-	//   console.error('Error saving edit:', error.message);
-	// }
+	try {
+	  const storedToken = localStorage.getItem('authToken');
+	  const response = await fetch(`${BASE_URL}/dashboard/page/notes/${noteId}/`, {
+		method: 'PATCH',
+		headers: {
+		  'Content-Type': 'application/json',
+		  Authorization: `Token ${storedToken}`,
+		},
+		body: JSON.stringify({id: noteId, content: noteContent}),
+	  });
+	  if (response.ok) {
+		closeTextField();
+		const responseJson = await response.json();
+		console.log("success of save note:", responseJson);
+
+		setNotes((prevItems) =>
+		  notes.map(item =>
+			item.id === parseInt(noteId) ? {...item, content: noteContent} : item
+		  )
+		);
+		console.log("getcurrentnotes:", getLatestNotes());
+	  } else {
+		closeTextField();
+		console.log("err saving edited note", response.status, response.statusText);
+	  }
+
+
+	} catch (error) {
+	  console.error('Error saving edit:', error.message);
+	}
 	console.log("TOOLBAR SAVE EDİT", noteIdToEdit);
   }
 
@@ -390,8 +392,8 @@ const Toolbar = ({
 			<Button
 			  onClick={() =>
 				(noteIdToEdit !== null
-				? saveEdit(noteIdToEdit)
-				: handleSave())
+				  ? saveEdit(noteIdToEdit)
+				  : handleSave())
 			  }
 			  variant="contained"
 			  color="primary"

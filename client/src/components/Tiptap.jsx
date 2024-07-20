@@ -52,7 +52,7 @@ const Tiptap = ({
 	else{
 	  const latestNotes = getLatestNotes();
 	  console.log("noteid", noteId);
-	  setNoteIdToEdit(noteId);//todo check
+	  setNoteIdToEdit(noteId);
 	  const filler = latestNotes.find((note) => note.id === parseInt(noteId, 10)).content;
 	  console.log("filler", filler);
 	  console.log("ediaağt", latestNotes);
