@@ -37,6 +37,8 @@ const Toolbar = ({
 				   textFieldPlacement,
 				   noteContent,
 				   setNoteContent,
+				   noteIdToEdit,
+				   setNoteIdToEdit
 				 }) => {
   const noteIdRef = useRef(0);
   const takeNoteRef = useRef(true);
@@ -155,21 +157,56 @@ const Toolbar = ({
 	}
   };
 
-
-  const handleCancel = () => {
+  function closeTextField() {
 	setIsTextFieldShown(false);
 	setNoteContent('');
+  }
+
+  const saveEdit = async (noteId) => {
+	// try {
+	//   const storedToken = localStorage.getItem('authToken');
+	//   const response = await fetch(`${BASE_URL}/dashboard/page/notes/${noteId}`, {
+	// 	method: 'PATCH',
+	// 	headers: {
+	// 	  'Content-Type': 'application/json',
+	// 	  Authorization: `Token ${storedToken}`,
+	// 	},
+	// 	body: JSON.stringify({page: pageId, content: noteContent}),
+	//   });
+	//   if (response.ok) {
+	// 	const responseJson = await response.json();
+	// 	console.log("success of save note:", responseJson);
+	// 	noteRef.current = {
+	// 	  id: responseJson.id,
+	// 	  content: responseJson.content,
+	// 	}
+	// 	setNotes((prevNotes) => {
+	// 	  console.log("prevnotes", prevNotes);
+	// 	  return [...notes, noteRef.current]
+	// 	});
+	//   } else {
+	// 	console.log("HTTP error", response.status, response.statusText);
+	//   }
+	//   closeTextField();
+	//	 setNoteIdToEdit(null);
+	// } catch (error) {
+	//   console.error('Error saving edit:', error.message);
+	// }
+	console.log("TOOLBAR SAVE EDİT", noteIdToEdit);
+  }
+
+
+  const handleCancel = () => {
+	closeTextField();
 	editor.commands.setTextSelection({from: fromRef.current, to: toRef.current});
 	editor.chain().focus().unsetHighlight().run();
 	decrementNoteId();
+	console.log("handle initial cancel")
   };
 
   const handleSave = () => {
 	saveNote();
-	console.log("PAGEID", pageId);
-	console.log('Saved note content:', noteContent);
-	setIsTextFieldShown(false);
-	setNoteContent('');
+	closeTextField();
   };
 
   const buttonStyle = {
@@ -340,8 +377,27 @@ const Toolbar = ({
 			style={{width: '300px'}}
 		  />
 		  <div style={{marginTop: '10px', textAlign: 'right'}}>
-			<Button onClick={handleCancel} style={{marginRight: '10px'}}>Cancel</Button>
-			<Button onClick={handleSave} variant="contained" color="primary">Save</Button>
+			<Button
+			  onClick={() =>
+				(noteIdToEdit !== null
+				  ? closeTextField()
+				  : handleCancel())
+			  }
+			  style={{marginRight: '10px'}}
+			>
+			  Cancel
+			</Button>
+			<Button
+			  onClick={() =>
+				(noteIdToEdit !== null
+				? saveEdit(noteIdToEdit)
+				: handleSave())
+			  }
+			  variant="contained"
+			  color="primary"
+			>
+			  Save
+			</Button>
 		  </div>
 		</div>
 	  )}
