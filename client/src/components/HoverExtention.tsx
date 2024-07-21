@@ -114,6 +114,7 @@ const HoverExtension = ({setNotes, getLatestNotes, showTextFieldAtCursor}) => {
               mouseover(view, event) {
                 const target = event.target as HTMLElement;
                 const notes = getLatestNotes();
+                console.log(notes);
                 if (target.tagName === 'MARK' && target.hasAttribute('note_id') && target.getAttribute('note_id') !== '0') {
                   const noteId = target.getAttribute('note_id');
                   const currentNote = notes.find((item) => item.id === parseInt(noteId, 10));

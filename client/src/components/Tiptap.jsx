@@ -18,7 +18,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Head from "next/head";
 
 const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
-const limit = 280;
+const limit = 10000;
 
 const Tiptap = ({
 				  onChange,

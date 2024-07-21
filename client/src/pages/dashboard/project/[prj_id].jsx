@@ -207,6 +207,7 @@ const ProjectPage = () => {
 
 	  <AwesomeButton
 		onPress={() => {
+		  handleSave();
 		  router.push('/dashboard/');
 		}} //maybe projelerin hepsinin olduğu yan menü olur
 		type="secondary"
@@ -226,6 +227,7 @@ const ProjectPage = () => {
 	  </AwesomeButton>
 	  <AwesomeButton
 		onPress={() => {
+		  handleSave();
 		  router.push(`/dashboard/project/overview/${prj_id}`);
 		}}
 		type="secondary"
