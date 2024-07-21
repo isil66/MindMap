@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Background,
   Controls,
@@ -13,6 +12,7 @@ import LeafNode from '@/components/LeafNode';
 import WoodLogNode from "@/components/WoodLogNode";
 import {useState, useCallback} from 'react';
 
+const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
 const nodeTypes = {
   leaf: LeafNode,
@@ -46,6 +46,33 @@ const initialEdges = [
 ];
 
 const OverviewPage = () => {
+
+  const fetchOverview = async () => {
+	try {
+	  const storedToken = localStorage.getItem('authToken');
+	  const response = await fetch(`${BASE_URL}/dashboard/overview/25/`, {
+		method: 'GET',
+		headers: {
+		  'Content-Type': 'application/json',
+		  Authorization: `Token ${storedToken}`,
+		},
+
+	  });
+	  if (!response.ok) {
+		console.log("failed overview")
+	  } else {
+		console.log("succesfully overview");
+		const responseJson = await response.json();
+		console.log(responseJson);
+	  }
+	} catch (error) {
+	  console.log("err yedük yakala", error);
+	}
+  };
+
+  useEffect(() => {
+	fetchOverview();
+  }, []);
 
   const [nodes, setNodes] = useState(elements);
   const [edges, setEdges] = useState(initialEdges);

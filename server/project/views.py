@@ -162,3 +162,28 @@ class NoteView(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class ProjectPagesNotesViewSet(viewsets.ModelViewSet):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        prj_id = self.kwargs.get('prj_id')
+        return Page.objects.filter(project_id=prj_id).prefetch_related('note_set').order_by('id')
+
+    def list(self, request, *args, **kwargs):
+        prj_id = self.kwargs.get('prj_id')
+        try:
+            project = DocumentProject.objects.get(pk=prj_id)
+        except DocumentProject.DoesNotExist:
+            return Response({'detail': 'Project not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        pages = self.get_queryset()
+        response_data = {}
+        for page in pages:
+            notes_ids = list(page.note_set.values_list('id', flat=True))
+            response_data[page.id] = notes_ids
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
