@@ -10,18 +10,18 @@ import {
 import '@xyflow/react/dist/style.css';
 import LeafNode from '@/components/LeafNode';
 import WoodLogNode from "@/components/WoodLogNode";
+import {useRouter} from 'next/router';
+import {AwesomeButton} from "react-awesome-button";
+
+
+
+const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
 const nodeTypes = {
   leaf: LeafNode,
   wood: WoodLogNode,
 };
 
-const woodLeafData = {
-  "46": [54, 57, 64, 67, 69, 71, 73, 74],
-  "47": [60, 62, 66, 68, 75],
-  "48": [56, 70],
-  "49": [76, 77]
-};
 
 const generateElements = (data) => {
   const nodes = [];
@@ -30,10 +30,10 @@ const generateElements = (data) => {
   let woodXPos = 100; // init x for first wood
   const woodYPos = 300; // fixed for now
   const woodSpacing = 300;
-  const leafOffsetY = 200; // Vertical distance between wood nodes and leaves
-  const leafSpacingX = 75; // Horizontal spacing between leaves
+  const leafOffsetY = 200;
+  const leafSpacingX = 75;
 
-  // Generate wood nodes
+
   Object.keys(data).forEach((woodId, woodIndex) => {
 	//handle wood nodes
 	const woodNodeId = `wood-${woodId}`;
@@ -54,7 +54,6 @@ const generateElements = (data) => {
 		targetHandle: 'l',
 	  });
 	}
-
 
 	//handle leaf nodes
 	const leaves = data[woodId];
@@ -88,7 +87,7 @@ const generateElements = (data) => {
 	  nodes.push({
 		id: leafNodeId,
 		type: 'leaf',
-		position: {x: woodXPos + leafXOffset, y: woodYPos + leafOffsetY +100},
+		position: {x: woodXPos + leafXOffset, y: woodYPos + leafOffsetY + 100},
 		data: {rotate: true},
 	  });
 
@@ -101,7 +100,9 @@ const generateElements = (data) => {
 		type: 'bezier',
 	  });
 	});
+
 	woodXPos += woodSpacing;
+
   });
 
   return {nodes, edges};
@@ -111,11 +112,39 @@ const generateElements = (data) => {
 const OverviewPage = () => {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
+  const router = useRouter();
+  const [overViewData, setOverViewData] = useState(null);
+  const {prj_id} = router.query;
+
+  const fetchOverview = async () => {
+	try {
+	  const storedToken = localStorage.getItem('authToken');
+	  const response = await fetch(`${BASE_URL}/dashboard/overview/${prj_id}/`, {
+		method: 'GET',
+		headers: {
+		  'Content-Type': 'application/json',
+		  Authorization: `Token ${storedToken}`,
+		},
+
+	  });
+	  if (!response.ok) {
+		console.log("failed overview")
+	  } else {
+		console.log("succesfully overview");
+		const responseJson = await response.json();
+		console.log(responseJson);
+		setOverViewData(responseJson);
+		const {nodes: generatedNodes, edges: generatedEdges} = generateElements(responseJson);
+		setNodes(generatedNodes);
+		setEdges(generatedEdges);
+	  }
+	} catch (error) {
+	  console.log("err yedük yakala", error);
+	}
+  };
 
   useEffect(() => {
-	const {nodes: generatedNodes, edges: generatedEdges} = generateElements(woodLeafData);
-	setNodes(generatedNodes);
-	setEdges(generatedEdges);
+	fetchOverview();
   }, []);
 
   const onNodesChange = useCallback(
@@ -131,6 +160,25 @@ const OverviewPage = () => {
 //onNodesChange kaldırdım for nondragablity
   return (
 	<div style={{height: 500}}>
+	  <AwesomeButton
+		onPress={() => {
+		  router.push(`/dashboard/project/${prj_id}`);
+		}}
+		type="secondary"
+		style={{
+		  position: "absolute",
+		  top: "20%",
+		  left: "3%",
+		  buttonPrimaryColor: "#230a10",
+		  height: "40px",
+		  width: "100px",
+		  fontSize: "16px",
+		  borderRadius: "10px",
+		  primaryColor: "#00000"
+		}}
+	  >
+		⬅Project
+	  </AwesomeButton>
 	  <ReactFlow
 		nodes={nodes}
 		edges={edges}

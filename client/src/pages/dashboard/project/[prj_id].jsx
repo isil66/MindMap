@@ -216,13 +216,32 @@ const ProjectPage = () => {
 		  left: "3%",
 		  buttonPrimaryColor: "#230a10",
 		  height: "40px",
+		  width: "125px",
+		  fontSize: "16px",
+		  borderRadius: "10px",
+		  primaryColor: "#00000"
+		}}
+	  >
+		⬅Dashboard
+	  </AwesomeButton>
+	  <AwesomeButton
+		onPress={() => {
+		  router.push(`/dashboard/project/overview/${prj_id}`);
+		}}
+		type="secondary"
+		style={{
+		  position: "absolute",
+		  top: "20%",
+		  left: "4%",
+		  buttonPrimaryColor: "#230a10",
+		  height: "40px",
 		  width: "100px",
 		  fontSize: "16px",
 		  borderRadius: "10px",
 		  primaryColor: "#00000"
 		}}
 	  >
-		⬅Projects
+		Overview
 	  </AwesomeButton>
 	  <Tiptap content={content}
 			  onChange={(newContent) => handleContentChange(newContent)}

@@ -4,7 +4,7 @@ import {useCallback} from 'react';
 import style from '../styles/WoodLogNode.module.css';
 import {Handle, Position} from '@xyflow/react';
 
-const LeafNode = ({data}) => {
+const WoodLogNode = ({data}) => {
   const onChange = useCallback((evt) => {
 	console.log(evt.target.value);
   }, []);
@@ -26,4 +26,4 @@ const LeafNode = ({data}) => {
   );
 };
 
-export default LeafNode;
+export default WoodLogNode;
