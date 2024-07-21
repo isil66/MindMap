@@ -10,11 +10,13 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import LeafNode from '@/components/LeafNode';
+import WoodLogNode from "@/components/WoodLogNode";
 import {useState, useCallback} from 'react';
 
 
 const nodeTypes = {
   leaf: LeafNode,
+  wood: WoodLogNode
 };
 
 const elements = [
@@ -30,11 +32,19 @@ const elements = [
 	position: {x: 300, y: 250},
 	data: {},
   },
+  {
+	id: '3',
+	type: 'wood', // this should match the type defined in nodeTypes
+	position: {x: 350, y: 400},
+	data: {},
+  },
+
   //todo add it dynamically
 ];
 
 const initialEdges = [
-  { id: '1-2', source: '1', target: '2', label: 'to the', type: 'step' },
+  { id: '1-3', source: '1', target: '3', targetHandle: 't', label: '', type: 'step' },
+  { id: '2-3', source: '2', target: '3',targetHandle: 't', label: '', type: 'step' },
 ];
 
 const OverviewPage = () => {
