@@ -19,8 +19,8 @@ const LeafNode = ({data}) => {
 	  <>
 		<Handle type="target" position={Position.Left} id="l" className={`${style.handle} ${style.handleLeft}`}/>
 		<Handle type="source" position={Position.Right} id="r" className={`${style.handle} ${style.handleRight}`}/>
-		<Handle type="target" position={Position.Top} id="t" className={`${style.handle} ${style.handleTop}`}/>
-		<Handle type="target" position={Position.Bottom} id="b" className={`${style.handle} ${style.handleBottom}`}/>
+		<Handle type="source" position={Position.Top} id="t" className={`${style.handle} ${style.handleTop}`}/>
+		<Handle type="source" position={Position.Bottom} id="b" className={`${style.handle} ${style.handleBottom}`}/>
 	  </>
 	</div>
   );
