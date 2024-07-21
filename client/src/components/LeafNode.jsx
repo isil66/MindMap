@@ -13,6 +13,7 @@ const LeafNode = ({data}) => {
 	<div
 	  className={style.leafNode}
 	  style={{transform: (data.rotate ? 'rotate(180deg)' : 'none')}}
+	  onDragStart={(e) => e.preventDefault()}
 	>
 	  <LeafSVG/>
 	  <>

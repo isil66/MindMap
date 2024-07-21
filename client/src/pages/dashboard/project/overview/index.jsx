@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Background,
   Controls,
@@ -10,91 +10,108 @@ import {
 import '@xyflow/react/dist/style.css';
 import LeafNode from '@/components/LeafNode';
 import WoodLogNode from "@/components/WoodLogNode";
-import {useState, useCallback} from 'react';
-
-const BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_BASE_URL;
 
 const nodeTypes = {
   leaf: LeafNode,
-  wood: WoodLogNode
+  wood: WoodLogNode,
 };
 
-const elements = [
-  {
-	id: '1',
-	type: 'leaf', // this should match the type defined in nodeTypes
-	position: {x: 510, y: 250},
-	data: {label: "hello", rotate: false},
-  },
-  {
-	id: '2',
-	type: 'leaf',
-	position: {x: 300, y: 250},
-	data: {rotate: true}, //prop burdan atılıyo
-  },
-  {
-	id: '3',
-	type: 'wood',
-	position: {x: 350, y: 400},
-	data: {},
-  },
-];
+const woodLeafData = {
+  "46": [54, 57, 64, 67, 69, 71, 73, 74],
+  "47": [60, 62, 66, 68, 75],
+  "48": [56, 70],
+  "49": [76, 77]
+};
 
-const initialEdges = [
-  {id: '1-3', source: '1', target: '3', targetHandle: 't', label: '', type: 'step'},
-  {id: '2-3', source: '2', target: '3', targetHandle: 't', label: '', type: 'step'},
-];
+const generateElements = (data) => {
+  const nodes = [];
+  const edges = [];
+
+  let xPos = 100; // Initial x position for the first wood node
+  const woodYPos = 300; // Fixed y position for wood nodes
+  const woodSpacing = 300; // Increase the horizontal distance between wood nodes
+  const leafOffsetY = 100; // Vertical distance between wood nodes and leaves
+
+  // Generate wood nodes
+  Object.keys(data).forEach((woodId, index) => {
+	const woodNodeId = `wood-${woodId}`;
+	nodes.push({
+	  id: woodNodeId,
+	  type: 'wood',
+	  position: {x: xPos, y: woodYPos},
+	  data: {},
+	});
+
+
+	if (index > 0) {
+	  const previousWoodNodeId = `wood-${Object.keys(data)[index - 1]}`;
+	  edges.push({
+		id: `${previousWoodNodeId}-${woodNodeId}`,
+		source: previousWoodNodeId,
+		target: woodNodeId,
+		sourceHandle: 'r',
+		targetHandle: 'l',
+	  });
+	}
+
+	xPos += woodSpacing;
+
+
+	const leaves = data[woodId];
+	const half = Math.ceil(leaves.length / 2);
+
+	leaves.forEach((leafId, index) => {
+	  const leafNodeId = `leaf-${leafId}`;
+	  const isTop = index < half; // Determine if the leaf should go to the top or bottom
+
+	  nodes.push({
+		id: leafNodeId,
+		type: 'leaf',
+		position: {x: xPos, y: woodYPos + (isTop ? -leafOffsetY : leafOffsetY) * (index + 1)}, // Position leaves
+		data: {rotate: false}, // You can modify this as needed
+	  });
+
+	  edges.push({
+		id: `${woodNodeId}-${leafNodeId}`,
+		source: woodNodeId,
+		target: leafNodeId,
+		sourceHandle: isTop ? 't' : 'b',
+		targetHandle: 'b',
+	  });
+	});
+  });
+
+  return {nodes, edges};
+};
 
 const OverviewPage = () => {
-
-  const fetchOverview = async () => {
-	try {
-	  const storedToken = localStorage.getItem('authToken');
-	  const response = await fetch(`${BASE_URL}/dashboard/overview/25/`, {
-		method: 'GET',
-		headers: {
-		  'Content-Type': 'application/json',
-		  Authorization: `Token ${storedToken}`,
-		},
-
-	  });
-	  if (!response.ok) {
-		console.log("failed overview")
-	  } else {
-		console.log("succesfully overview");
-		const responseJson = await response.json();
-		console.log(responseJson);
-	  }
-	} catch (error) {
-	  console.log("err yedük yakala", error);
-	}
-  };
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
 
   useEffect(() => {
-	fetchOverview();
+	const {nodes: generatedNodes, edges: generatedEdges} = generateElements(woodLeafData);
+	setNodes(generatedNodes);
+	setEdges(generatedEdges);
   }, []);
 
-  const [nodes, setNodes] = useState(elements);
-  const [edges, setEdges] = useState(initialEdges);
-
   const onNodesChange = useCallback(
-	(changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-	[],
+	 (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+
+	[]
   );
+
   const onEdgesChange = useCallback(
 	(changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-	[],
+	[]
   );
-
-  //fitView ortalıyo
-
+//onNodesChange kaldırdım for nondragablity
   return (
 	<div style={{height: 500}}>
 	  <ReactFlow
-		nodes={elements}
+		nodes={nodes}
+		edges={edges}
 		nodeTypes={nodeTypes}
 		onNodesChange={onNodesChange}
-		edges={edges}
 		onEdgesChange={onEdgesChange}
 		fitView
 	  >
