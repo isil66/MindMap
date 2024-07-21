@@ -1,4 +1,4 @@
-// src/App.js
+
 import React from 'react';
 import {
   Background,
@@ -24,27 +24,25 @@ const elements = [
 	id: '1',
 	type: 'leaf', // this should match the type defined in nodeTypes
 	position: {x: 510, y: 250},
-	data: {label:"hello"},
+	data: {label: "hello", rotate: false},
   },
   {
 	id: '2',
-	type: 'leaf', // this should match the type defined in nodeTypes
+	type: 'leaf',
 	position: {x: 300, y: 250},
-	data: {},
+	data: {rotate: true}, //prop burdan atılıyo
   },
   {
 	id: '3',
-	type: 'wood', // this should match the type defined in nodeTypes
+	type: 'wood',
 	position: {x: 350, y: 400},
 	data: {},
   },
-
-  //todo add it dynamically
 ];
 
 const initialEdges = [
-  { id: '1-3', source: '1', target: '3', targetHandle: 't', label: '', type: 'step' },
-  { id: '2-3', source: '2', target: '3',targetHandle: 't', label: '', type: 'step' },
+  {id: '1-3', source: '1', target: '3', targetHandle: 't', label: '', type: 'step'},
+  {id: '2-3', source: '2', target: '3', targetHandle: 't', label: '', type: 'step'},
 ];
 
 const OverviewPage = () => {
