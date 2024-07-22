@@ -42,10 +42,11 @@ class ProjectAPIView(viewsets.ModelViewSet):
     # dashboard/ POST
     def create(self, request, *args, **kwargs):
         data = request.data.copy()  # to not modify original data
-        print("data printing: ", data)
         data['owner'] = request.user.id
+
         serializer = ProjectCreateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
+
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -94,10 +95,9 @@ class PageView(viewsets.ModelViewSet):
         if serializer.is_valid():
             print("serailizer valid")
         else:
-            print("serailizer NOT valid")
             return Response(serializer.data, status=status.HTTP_226_IM_USED)
         serializer.save()
-        print("partial update")
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     #  POST dashboard/page/
@@ -119,9 +119,8 @@ class PageView(viewsets.ModelViewSet):
         page_instance = self.get_object()  # get the page instance with given id
 
         notes = Note.objects.filter(page=page_instance).order_by('id')
-        print("notes backend called:", notes)
+
         if notes.exists():
-            print("notes exist")
             notes_serializer = NoteSerializer(notes, many=True)
             return Response({
                 'notes': notes_serializer.data
@@ -152,9 +151,7 @@ class NoteView(viewsets.ModelViewSet):
 
     #  POST dashboard/page/notes/
     def create(self, request, *args, **kwargs):
-        print("backened post")
         data = request.data.copy()  # to not modify original data
-        print(data)
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
